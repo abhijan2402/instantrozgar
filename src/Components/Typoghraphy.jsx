@@ -6,9 +6,11 @@ const Typoghraphy = ({
   size = 14,
   color = 'black',
   fontWeight = '400',
+  style,
 }) => {
   return (
-    <Text style={{fontSize: size, color: color, fontWeight: fontWeight}}>
+    <Text
+      style={[{fontSize: size, color: color, fontWeight: fontWeight}, style]}>
       {children}
     </Text>
   );
