@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
@@ -6,9 +6,9 @@ import LottieView from 'lottie-react-native';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 
-const Selection = () => {
+const Selection = ({navigation}) => {
   return (
-    <View style={styles.MainContainer}>
+    <ScrollView style={styles.MainContainer}>
       <LottieView
         source={require('../../assets/LottieFiles/SelectionImage.json')}
         autoPlay
@@ -48,13 +48,13 @@ const Selection = () => {
           BtnTxtStyle={[styles.BtnTxtStyle, {color: Color.White}]}
           title={'Offering Job'}
           onPress={() => {
-            console.log('hi');
+            navigation.navigate('SignIn');
           }}
         />
 
         <Button
           onPress={() => {
-            console.log('hi');
+            navigation.navigate('SignIn');
           }}
           BtnStyle={[
             styles.BtnStyle,
@@ -65,7 +65,7 @@ const Selection = () => {
         />
         {/* <View style={styles.BtnView}></View> */}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

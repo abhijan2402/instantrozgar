@@ -7,6 +7,7 @@ import {
   TextInput,
   View,
   Image,
+  TouchableOpacity,
 } from 'react-native';
 import React from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
@@ -15,7 +16,7 @@ import LottieView from 'lottie-react-native';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 
-const SignUp = () => {
+const SignUp = ({navigation}) => {
   return (
     <ScrollView style={styles.MainContainer}>
       <LottieView
@@ -106,6 +107,25 @@ const SignUp = () => {
           BtnTxtStyle={[styles.BtnTxtStyle]}
           title={'Create Account'}
         />
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignSelf: 'center',
+          }}>
+          <Typoghraphy size={15} color={Color.Black} fontWeight="500">
+            Already have an account?
+          </Typoghraphy>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate('SignIn');
+            }}>
+            <Typoghraphy size={15} color={Color.ThemeBlue} fontWeight="700">
+              {' '}
+              Sign In
+            </Typoghraphy>
+          </TouchableOpacity>
+        </View>
       </View>
     </ScrollView>
   );
