@@ -12,7 +12,7 @@ const Header = ({title, leftIcon = false}) => {
         flexDirection: 'row',
         alignItems: 'center',
         // justifyContent: 'space-between',
-        // alignSelf: 'center',
+        alignSelf: leftIcon ? null : 'center',
         marginVertical: 10,
       }}>
       {leftIcon ? (

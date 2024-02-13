@@ -1,14 +1,15 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
+import Header from '../../Components/Header';
 
-const Home = () => {
+const HomeSeeker = () => {
   return (
     <View>
-      <Text>Home</Text>
+      <Header title={'Search Jobs'} />
     </View>
   );
 };
 
-export default Home;
+export default HomeSeeker;
 
 const styles = StyleSheet.create({});
