@@ -1,12 +1,15 @@
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import Header from '../../Components/Header';
 import Typoghraphy from '../../Components/Typoghraphy';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
+import {GlobalVariable} from '../../../App';
 
 const Profile = () => {
+  const {setUser} = useContext(GlobalVariable);
+
   return (
     <View style={styles.MainContainer}>
       <Header title={'Profile'} />
@@ -41,7 +44,7 @@ const Profile = () => {
         </View>
         <Button
           onPress={() => {
-            console.log('hi');
+            setUser(false);
           }}
           BtnStyle={[
             styles.BtnStyle,

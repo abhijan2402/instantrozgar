@@ -9,14 +9,17 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
 import LottieView from 'lottie-react-native';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
+import {GlobalVariable} from '../../../App';
 
 const SignIn = ({navigation}) => {
+  const {setUser} = useContext(GlobalVariable);
+
   return (
     <ScrollView style={styles.MainContainer}>
       <LottieView
@@ -59,6 +62,7 @@ const SignIn = ({navigation}) => {
               height: 38,
               alignItems: 'center',
               width: '80%',
+              color: Color.Black,
             }}
           />
         </View>
@@ -76,12 +80,13 @@ const SignIn = ({navigation}) => {
               height: 38,
               alignItems: 'center',
               width: '80%',
+              color: Color.Black,
             }}
           />
         </View>
         <Button
           onPress={() => {
-            console.log('hi');
+            setUser(true);
           }}
           BtnStyle={[
             styles.BtnStyle,

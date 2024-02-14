@@ -59,6 +59,7 @@ const SignUp = ({navigation}) => {
               height: 38,
               alignItems: 'center',
               width: '80%',
+              color: Color.Black,
             }}
           />
         </View>
@@ -76,6 +77,7 @@ const SignUp = ({navigation}) => {
               height: 38,
               alignItems: 'center',
               width: '80%',
+              color: Color.Black,
             }}
           />
         </View>
@@ -93,6 +95,7 @@ const SignUp = ({navigation}) => {
               height: 38,
               alignItems: 'center',
               width: '80%',
+              color: Color.Black,
             }}
           />
         </View>
