@@ -13,6 +13,8 @@ import Profile from './src/Screens/ProfileMain/Profile';
 import AddJob from './src/Screens/Home/AddJob';
 import BottomTab from './src/Navigation/BottomTab';
 import JobDescription from './src/Screens/Home/JobDescription';
+import JobList from './src/Components/ProviderComp/JobList';
+import ListApplicant from './src/Components/ProviderComp/ListApplicant';
 
 export const GlobalVariable = createContext();
 const App = () => {
@@ -35,14 +37,12 @@ const App = () => {
             }}
             initialRouteName="BottomTab">
             <Stack.Screen name="BottomTab" component={BottomTab} />
-            {/* <Stack.Screen name="ProfileCompany" component={ProfileCompany} />
-        <Stack.Screen name="HomeSeeker" component={HomeSeeker} />
-        <Stack.Screen name="Profile" component={Profile} />
-        <Stack.Screen name="CreateProfile" component={CreateProfile} />
-        <Stack.Screen name="CreateProfileRecruter" component={CreateProfileRecruter} />
-        <Stack.Screen name="Selection" component={Selection} />
-        <Stack.Screen name="SignIn" component={SignIn} />
-        <Stack.Screen name="SignUp" component={SignUp} /> */}
+            <Stack.Screen name="JobDescription" component={JobDescription} />
+            <Stack.Screen name="AddJob" component={AddJob} />
+            <Stack.Screen name="JobList" component={JobList} />
+            <Stack.Screen name="ListApplicant" component={ListApplicant} />
+
+
           </Stack.Navigator>
         ) : (
           <Stack.Navigator

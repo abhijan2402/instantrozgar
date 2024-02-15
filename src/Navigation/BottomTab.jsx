@@ -18,9 +18,22 @@ import Feather from 'react-native-vector-icons/Feather';
 import HomeSeeker from '../Screens/Home/HomeSeeker';
 import Profile from '../Screens/ProfileMain/Profile';
 import {Color} from '../Constants/Color';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import HomeProvider from '../Screens/Home/HomeProvider';
+import ProfileCompany from '../Screens/ProfileMain/ProfileCompany';
 const Tab = createBottomTabNavigator();
 
 const BottomTab = () => {
+  const [Types, setTypes] = useState('');
+  useEffect(() => {
+    Val();
+  }, []);
+  const Val = async () => {
+    const Type = await AsyncStorage.getItem('Type');
+    console.log(Type);
+    setTypes(Type);
+  };
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -40,7 +53,7 @@ const BottomTab = () => {
       }}>
       <Tab.Screen
         name="HomeSeeker"
-        component={HomeSeeker}
+        component={Types == 'Providing' ? HomeProvider : HomeSeeker}
         options={{
           tabBarIcon: ({focused}) => (
             <View style={{alignItems: 'center', justifyContent: 'center'}}>
@@ -62,7 +75,7 @@ const BottomTab = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={Profile}
+        component={Types == 'Providing' ? ProfileCompany : Profile}
         options={{
           tabBarIcon: ({focused}) => (
             <View style={{alignItems: 'center', justifyContent: 'center'}}>

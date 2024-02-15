@@ -5,10 +5,16 @@ import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 
-const AddJob = () => {
+const AddJob = ({navigation}) => {
   return (
     <ScrollView style={styles.MainContainer}>
-      <Header title={'Post Job'} leftIcon={true} />
+      <Header
+        title={'Post Job'}
+        leftIcon={true}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
       <View style={{marginHorizontal: 20}}>
         <TextInput
           placeholder="Job Role"

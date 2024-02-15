@@ -6,19 +6,24 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React from 'react';
+import React, {useContext} from 'react';
 import Header from '../../Components/Header';
 import Typoghraphy from '../../Components/Typoghraphy';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 import LottieView from 'lottie-react-native';
+import {GlobalVariable} from '../../../App';
 
 const ProfileCompany = () => {
+  const {setUser} = useContext(GlobalVariable);
+
   return (
     <View style={styles.MainContainer}>
       <Header title={'Profile'} />
-      <ScrollView style={styles.InfoContainer}>
+      <ScrollView
+        style={styles.InfoContainer}
+        showsVerticalScrollIndicator={false}>
         {/* <Image
           source={{
             uri: 'https://cdn-icons-png.flaticon.com/128/3033/3033143.png',
@@ -71,7 +76,7 @@ const ProfileCompany = () => {
         </View>
         <Button
           onPress={() => {
-            console.log('hi');
+            setUser(false);
           }}
           BtnStyle={[
             styles.BtnStyle,
@@ -90,6 +95,7 @@ export default ProfileCompany;
 const styles = StyleSheet.create({
   InfoContainer: {
     // alignItems: 'center',
+    marginBottom: '18%',
   },
   MainContainer: {
     height: windowHeight,

@@ -6,7 +6,7 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
 import LottieView from 'lottie-react-native';
@@ -15,8 +15,11 @@ import Button from '../../Components/Button';
 import Header from '../../Components/Header';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
+import {GlobalVariable} from '../../../App';
 
-const CreateProfile = () => {
+const CreateProfile = ({navigation}) => {
+  const {setUser} = useContext(GlobalVariable);
+
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -117,7 +120,7 @@ const CreateProfile = () => {
         />
         <Button
           onPress={() => {
-            console.log('hi');
+            setUser(true);
           }}
           BtnStyle={[
             styles.BtnStyle,

@@ -5,8 +5,13 @@ import Typoghraphy from '../../Components/Typoghraphy';
 import LottieView from 'lottie-react-native';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Selection = ({navigation}) => {
+  const UpdateType = async value => {
+    const Type = await AsyncStorage.setItem('Type', value);
+    navigation.navigate('SignIn');
+  };
   return (
     <ScrollView style={styles.MainContainer}>
       <LottieView
@@ -48,13 +53,13 @@ const Selection = ({navigation}) => {
           BtnTxtStyle={[styles.BtnTxtStyle, {color: Color.White}]}
           title={'Offering Job'}
           onPress={() => {
-            navigation.navigate('SignIn');
+            UpdateType('Providing');
           }}
         />
 
         <Button
           onPress={() => {
-            navigation.navigate('SignIn');
+            UpdateType('Seeking');
           }}
           BtnStyle={[
             styles.BtnStyle,

@@ -101,7 +101,7 @@ const SignUp = ({navigation}) => {
         </View>
         <Button
           onPress={() => {
-            console.log('hi');
+            navigation.navigate('CreateProfile');
           }}
           BtnStyle={[
             styles.BtnStyle,

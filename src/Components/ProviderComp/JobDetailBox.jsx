@@ -3,14 +3,16 @@ import React from 'react';
 import {Color} from '../../Constants/Color';
 import Typoghraphy from '../Typoghraphy';
 import Button from '../Button';
+import {windowWidth} from '../../Constants/Dimension';
 
-const JobCategoryBox = ({
+const JobDetailBox = ({
   CompanyName,
   Sector,
   Salary,
   MinExp,
   Mode,
   onPress,
+  NoOfApplicant,
 }) => {
   return (
     <View
@@ -24,9 +26,6 @@ const JobCategoryBox = ({
         elevation: 10,
         shadowColor: Color.ThemeBlue,
       }}>
-      <Typoghraphy size={16} color={Color.Black} fontWeight="700">
-        {CompanyName}
-      </Typoghraphy>
       <View style={styles.JobDesc}>
         <Image
           source={{
@@ -63,6 +62,17 @@ const JobCategoryBox = ({
         />
         <Typoghraphy style={styles.TextDesc}>{MinExp}</Typoghraphy>
       </View>
+      <View style={styles.JobDesc}>
+        <Image
+          source={{
+            uri: 'https://cdn-icons-png.flaticon.com/128/942/942799.png',
+          }}
+          style={{width: 15, height: 15}}
+        />
+        <Typoghraphy style={styles.TextDesc}>
+          {NoOfApplicant} Applicant
+        </Typoghraphy>
+      </View>
       <View style={{marginLeft: 5, marginTop: 5}}>
         {/* <Typoghraphy style={{fontWeight: '800'}}>Job Description</Typoghraphy> */}
         <Typoghraphy style={styles.TextDesc}>
@@ -71,8 +81,9 @@ const JobCategoryBox = ({
           since the 1500s, ....
         </Typoghraphy>
       </View>
+
       <Button
-        title={'Apply'}
+        title={'See Applicant Profiles'}
         BtnStyle={styles.Btn}
         BtnTxtStyle={styles.BtnTXt}
         onPress={onPress}
@@ -81,7 +92,7 @@ const JobCategoryBox = ({
   );
 };
 
-export default JobCategoryBox;
+export default JobDetailBox;
 
 const styles = StyleSheet.create({
   JobDesc: {
@@ -99,7 +110,7 @@ const styles = StyleSheet.create({
   },
   Btn: {
     alignSelf: 'flex-end',
-    width: 80,
+    width: windowWidth / 2,
     borderRadius: 5,
     marginHorizontal: 10,
     backgroundColor: Color.ThemeBlue,

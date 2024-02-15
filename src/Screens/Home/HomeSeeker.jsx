@@ -5,8 +5,9 @@ import Button from '../../Components/Button';
 import {Color} from '../../Constants/Color';
 import {windowHeight} from '../../Constants/Dimension';
 import JobCategoryBox from '../../Components/SeekerComp/JobCategoryBox';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const HomeSeeker = () => {
+const HomeSeeker = ({navigation}) => {
   return (
     <View style={{height: windowHeight}}>
       <Header title={'Find Jobs'} />
@@ -25,6 +26,9 @@ const HomeSeeker = () => {
             Salary={'30000'}
             MinExp={'3 years'}
             Mode={'Remote'}
+            onPress={() => {
+              navigation.navigate('JobDescription');
+            }}
           />
           <JobCategoryBox
             CompanyName={'Name'}
@@ -70,12 +74,6 @@ const HomeSeeker = () => {
           />
         </ScrollView>
       </View>
-
-      <Button
-        title={'+'}
-        BtnStyle={styles.BtnStyleMain}
-        BtnTxtStyle={{color: Color.White, fontSize: 30}}
-      />
     </View>
   );
 };
@@ -83,19 +81,6 @@ const HomeSeeker = () => {
 export default HomeSeeker;
 
 const styles = StyleSheet.create({
-  BtnStyleMain: {
-    position: 'absolute',
-    width: 55,
-    height: 55,
-    backgroundColor: Color.ThemeBlue,
-    bottom: 100,
-    right: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 50,
-    elevation: 10,
-    shadowColor: Color.Purple,
-  },
   Input: {
     borderWidth: 1,
     marginVertical: 10,
