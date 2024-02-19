@@ -21,17 +21,20 @@ import {Color} from '../Constants/Color';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeProvider from '../Screens/Home/HomeProvider';
 import ProfileCompany from '../Screens/ProfileMain/ProfileCompany';
+import {GlobalVariable} from '../../App';
 const Tab = createBottomTabNavigator();
 
 const BottomTab = () => {
   const [Types, setTypes] = useState('');
+  const userDetails = useContext(GlobalVariable);
   useEffect(() => {
     Val();
   }, []);
   const Val = async () => {
     const Type = await AsyncStorage.getItem('Type');
     console.log(Type);
-    setTypes(Type);
+    console.log(userDetails?.userDetails?.type, 'userDetails');
+    setTypes(userDetails?.userDetails?.type);
   };
 
   return (

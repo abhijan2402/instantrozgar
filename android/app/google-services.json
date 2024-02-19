@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "771112073495",
+    "project_id": "instantrozgar",
+    "storage_bucket": "instantrozgar.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:771112073495:android:88db4c5c34f1585ba61f52",
+        "android_client_info": {
+          "package_name": "com.jobproject"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA_yxjZDgo49FjVB1DI0Fm8xhlJcN9OIU0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

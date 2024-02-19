@@ -16,9 +16,11 @@ import Header from '../../Components/Header';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 import {GlobalVariable} from '../../../App';
+import firestore from '@react-native-firebase/firestore';
 
-const CreateProfile = ({navigation}) => {
-  const {setUser} = useContext(GlobalVariable);
+const CreateProfile = ({navigation, route}) => {
+  const {setUser, refreshAuth} = useContext(GlobalVariable);
+  const data = route?.params?.userID;
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
@@ -28,7 +30,33 @@ const CreateProfile = ({navigation}) => {
   ]);
   const [date, setDate] = useState(new Date());
   const [open1, setOpen1] = useState(false);
+  const [Name, setName] = useState(null);
+  const [HighestQualification, setHighestQualification] = useState(null);
+  const [YearGraduation, setYearGraduation] = useState(null);
+  const [DOB, setDOB] = useState(null);
+  const [skills, setskills] = useState(null);
+  const [Resume, setResume] = useState(null);
 
+  const UpdateData = async () => {
+    const Update = await firestore()
+      .collection('Seeker')
+      .doc(data)
+      .update({
+        Name: Name,
+        HighestQualification: HighestQualification,
+        YearGraduation: YearGraduation,
+        skills: skills,
+        Resume: Resume,
+        Gender: value,
+      })
+      .then(res => {
+        console.log(res, 'RESPPPPPPPP');
+        refreshAuth();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
   return (
     <ScrollView style={styles.MainContainer}>
       <Header title={'Create Profile'} leftIcon={true} />
@@ -50,17 +78,26 @@ const CreateProfile = ({navigation}) => {
           placeholder="Name"
           placeholderTextColor={Color.Black}
           style={styles.Input}
+          onChangeText={value => {
+            setName(value);
+          }}
         />
         <TextInput
           placeholder="Highest Qualification"
           placeholderTextColor={Color.Black}
           style={styles.Input}
+          onChangeText={value => {
+            setHighestQualification(value);
+          }}
         />
         <TextInput
           placeholder="Year of graduation"
           placeholderTextColor={Color.Black}
           style={styles.Input}
           keyboardType="numeric"
+          onChangeText={value => {
+            setYearGraduation(value);
+          }}
         />
         <DropDownPicker
           open={open}
@@ -91,6 +128,9 @@ const CreateProfile = ({navigation}) => {
           placeholderTextColor={Color.Black}
           style={styles.Input}
           keyboardType="numeric"
+          onChangeText={value => {
+            setskills(value);
+          }}
         />
         <DropDownPicker
           open={open}
@@ -117,10 +157,13 @@ const CreateProfile = ({navigation}) => {
           placeholderTextColor={Color.Black}
           style={styles.Input}
           keyboardType="numeric"
+          onChangeText={value => {
+            setResume(value);
+          }}
         />
         <Button
           onPress={() => {
-            setUser(true);
+            UpdateData();
           }}
           BtnStyle={[
             styles.BtnStyle,

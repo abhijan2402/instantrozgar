@@ -9,14 +9,81 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React from 'react';
+import React, {useState} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
 import LottieView from 'lottie-react-native';
 import {Color} from '../../Constants/Color';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+
 import Button from '../../Components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SignUp = ({navigation}) => {
+  const [email, setemail] = useState('');
+  const [password, setpassword] = useState('');
+  const [Cpassword, setCpassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
+  const validateUser = async () => {
+    try {
+      const Type = await AsyncStorage.getItem('Type');
+      if (email === '' || password === '' || Cpassword === '') {
+        throw 'Please fill email and password';
+      }
+      if (password != Cpassword) {
+        throw 'Both Password must be same';
+      } else {
+        setLoading(true);
+        try {
+          await auth()
+            .createUserWithEmailAndPassword(email, password)
+            .then(async userCredential => {
+              console.log(userCredential.user, 'USER_CREATED');
+              const user = userCredential.user;
+              return firestore()
+                .collection('Seeker')
+                .doc(user.uid)
+                .set({
+                  email: email,
+                  isVerified: false,
+                  type: Type,
+                  isProfileComplete: 0,
+                })
+                .then(async () => {
+                  if (Type == 'Seeking') {
+                    navigation.replace('CreateProfile', {userID: user.uid});
+                  } else {
+                    navigation.replace('CreateProfileRecruter', {
+                      userID: user.uid,
+                    });
+                  }
+                })
+                .catch(error => {
+                  console.log(error);
+                })
+                .finally(() => setLoading(false));
+            });
+        } catch (error) {
+          console.log(error, 'ERROR');
+
+          if (error.code === 'auth/weak-password') {
+            setLoading(false);
+          } else if (error.code === 'auth/email-already-in-use') {
+            setLoading(false);
+          } else {
+          }
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      console.log(error, 'ERROR');
+      alert(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <ScrollView style={styles.MainContainer}>
       <LottieView
@@ -61,6 +128,9 @@ const SignUp = ({navigation}) => {
               width: '80%',
               color: Color.Black,
             }}
+            onChangeText={value => {
+              setemail(value);
+            }}
           />
         </View>
         <View style={styles.Input}>
@@ -78,6 +148,9 @@ const SignUp = ({navigation}) => {
               alignItems: 'center',
               width: '80%',
               color: Color.Black,
+            }}
+            onChangeText={value => {
+              setpassword(value);
             }}
           />
         </View>
@@ -97,12 +170,17 @@ const SignUp = ({navigation}) => {
               width: '80%',
               color: Color.Black,
             }}
+            onChangeText={value => {
+              setCpassword(value);
+            }}
           />
         </View>
         <Button
           onPress={() => {
-            navigation.navigate('CreateProfile');
+            // navigation.navigate('CreateProfile');
+            validateUser();
           }}
+          loading={loading}
           BtnStyle={[
             styles.BtnStyle,
             {borderWidth: 2, borderColor: Color.ThemeBlue},
@@ -122,6 +200,7 @@ const SignUp = ({navigation}) => {
           <TouchableOpacity
             onPress={() => {
               navigation.navigate('SignIn');
+              // validateUser();
             }}>
             <Typoghraphy size={15} color={Color.ThemeBlue} fontWeight="700">
               {' '}

@@ -6,7 +6,7 @@ import {
     TextInput,
     TouchableOpacity,
 } from 'react-native';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { windowHeight, windowWidth } from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
 import LottieView from 'lottie-react-native';
@@ -15,8 +15,13 @@ import Button from '../../Components/Button';
 import Header from '../../Components/Header';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
+import { GlobalVariable } from '../../../App';
+import firestore from '@react-native-firebase/firestore';
 
-const CreateProfileRecruter = () => {
+const CreateProfileRecruter = ({ route }) => {
+    const { userDetails, refreshAuth } = useContext(GlobalVariable)
+    const data = route?.params?.userID
+    console.log(userDetails, data, "USER___DETAILS");
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([
@@ -25,6 +30,32 @@ const CreateProfileRecruter = () => {
     ]);
     const [date, setDate] = useState(new Date());
     const [open1, setOpen1] = useState(false);
+    const [CompanyName, setCompanyName] = useState(null)
+    const [CompanyMail, setCompanyMail] = useState(null)
+    const [city, setcity] = useState(null)
+    const [Certificate, setCertificate] = useState(null)
+    const [CompanyAddress, setCompanyAddress] = useState(null)
+
+
+    const UpdateData = async () => {
+        const Update = await firestore()
+            .collection('Seeker')
+            .doc(data)
+            .update({
+                CompanyName: CompanyName,
+                CompanyMail: CompanyMail,
+                Certificate: Certificate,
+                CompanyAddress: CompanyAddress,
+                city: city,
+            })
+            .then(async (res) => {
+                console.log(res, "RESPPPPPPPP");
+                refreshAuth()
+            }).catch((err) => {
+                console.log(err);
+            })
+
+    }
     return (
         <ScrollView style={styles.MainContainer}>
             <Header title={'Create Profile'} leftIcon={true} />
@@ -46,11 +77,17 @@ const CreateProfileRecruter = () => {
                     placeholder="Company Name"
                     placeholderTextColor={Color.Black}
                     style={styles.Input}
+                    onChangeText={value => {
+                        setCompanyName(value);
+                    }}
                 />
                 <TextInput
                     placeholder="Company Domain Mail"
                     placeholderTextColor={Color.Black}
                     style={styles.Input}
+                    onChangeText={value => {
+                        setCompanyMail(value);
+                    }}
                 />
 
                 <DropDownPicker
@@ -77,12 +114,18 @@ const CreateProfileRecruter = () => {
                     placeholder="Company Address"
                     placeholderTextColor={Color.Black}
                     style={styles.Input}
+                    onChangeText={value => {
+                        setCompanyAddress(value);
+                    }}
                 />
                 <TextInput
                     placeholder="Company Registration Certificate"
                     placeholderTextColor={Color.Black}
                     style={styles.Input}
                     keyboardType="numeric"
+                    onChangeText={value => {
+                        setCertificate(value);
+                    }}
                 />
                 <Typoghraphy
                     style={{ marginHorizontal: 5 }}
@@ -94,7 +137,7 @@ const CreateProfileRecruter = () => {
                 </Typoghraphy>
                 <Button
                     onPress={() => {
-                        console.log('hi');
+                        UpdateData()
                     }}
                     BtnStyle={[
                         styles.BtnStyle,

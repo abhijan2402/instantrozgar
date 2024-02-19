@@ -14,9 +14,14 @@ import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 import LottieView from 'lottie-react-native';
 import {GlobalVariable} from '../../../App';
+import auth from '@react-native-firebase/auth';
 
 const ProfileCompany = () => {
   const {setUser} = useContext(GlobalVariable);
+  const {userDetails} = useContext(GlobalVariable);
+  console.log('====================================');
+  console.log(userDetails, 'USER');
+  console.log('====================================');
 
   return (
     <View style={styles.MainContainer}>
@@ -42,28 +47,28 @@ const ProfileCompany = () => {
             // borderWidth: 1,
           }}
         />
-        <View style={[styles.InfoBox, {marginTop: 20}]}>
+        {/* <View style={[styles.InfoBox, {marginTop: 20}]}>
           <Typoghraphy size={15} color={Color.Black} fontWeight="700">
-            Abhishek Jangid
+            {userDetails?.CompanyName}
           </Typoghraphy>
           <Typoghraphy size={15} color={Color.Black} fontWeight="700">
-            +91-7976114618
+            {userDetails?.CompanyMail}
           </Typoghraphy>
-        </View>
+        </View> */}
         <View style={[styles.InfoBox]}>
           <Typoghraphy size={15} color={Color.Black} fontWeight="700">
-            Organization name : Aradhya Jaipur's
+            Organization name : {userDetails?.CompanyName}
           </Typoghraphy>
           <Typoghraphy size={15} color={Color.Black} fontWeight="700">
-            Email : abhishek.jangid999@gmail.com
+            Email : {userDetails?.CompanyMail}
           </Typoghraphy>
         </View>
         <View style={styles.InfoBox}>
           <Typoghraphy size={15} color={Color.Black} fontWeight="600">
-            State : Rajasthan
+            State : {userDetails?.city}
           </Typoghraphy>
           <Typoghraphy size={15} color={Color.Black} fontWeight="600">
-            City : Jaipur
+            City : {userDetails?.city}
           </Typoghraphy>
         </View>
         <View style={styles.InfoBox}>
@@ -76,7 +81,7 @@ const ProfileCompany = () => {
         </View>
         <Button
           onPress={() => {
-            setUser(false);
+            auth().signOut();
           }}
           BtnStyle={[
             styles.BtnStyle,

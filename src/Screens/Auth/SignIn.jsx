@@ -9,17 +9,59 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useState} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
 import LottieView from 'lottie-react-native';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 import {GlobalVariable} from '../../../App';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 const SignIn = ({navigation}) => {
-  const {setUser} = useContext(GlobalVariable);
+  const {setUser, refreshAuth} = useContext(GlobalVariable);
+  const [email, setemail] = useState('');
+  const [password, setpassword] = useState('');
+  const [Cpassword, setCpassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(true);
+  const validateUser = async () => {
+    console.log('TEST');
+    try {
+      if (email === '' || password === '') {
+        throw 'Please fill email and password';
+      } else {
+        setLoading(true);
+        try {
+          await auth()
+            .signInWithEmailAndPassword(email, password)
+            .then(async userCredential => {
+              console.log(userCredential.user, 'USER HERE');
+              // refreshAuth();
+              const user = userCredential.user;
+            });
+        } catch (error) {
+          console.log(error, 'ERROR');
 
+          if (error.code === 'auth/weak-password') {
+            alert(error);
+            setLoading(false);
+          } else if (error.code === 'auth/email-already-in-use') {
+            setLoading(false);
+          } else {
+            alert(error);
+            console.log(error);
+          }
+          setLoading(false);
+        }
+      }
+    } catch (error) {
+      console.log(error, 'ERROR');
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <ScrollView style={styles.MainContainer}>
       <LottieView
@@ -64,6 +106,9 @@ const SignIn = ({navigation}) => {
               width: '80%',
               color: Color.Black,
             }}
+            onChangeText={value => {
+              setemail(value);
+            }}
           />
         </View>
         <View style={styles.Input}>
@@ -82,12 +127,17 @@ const SignIn = ({navigation}) => {
               width: '80%',
               color: Color.Black,
             }}
+            onChangeText={value => {
+              setpassword(value);
+            }}
           />
         </View>
         <Button
           onPress={() => {
-            setUser(true);
+            // setUser(true);
+            validateUser();
           }}
+          loading={loading}
           BtnStyle={[
             styles.BtnStyle,
             {borderWidth: 2, borderColor: Color.ThemeBlue},

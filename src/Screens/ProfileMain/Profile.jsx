@@ -6,9 +6,13 @@ import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 import {GlobalVariable} from '../../../App';
+import auth from '@react-native-firebase/auth';
 
 const Profile = () => {
-  const {setUser} = useContext(GlobalVariable);
+  const {setUser, userDetails} = useContext(GlobalVariable);
+  console.log('====================================');
+  console.log(userDetails, 'USER');
+  console.log('====================================');
 
   return (
     <View style={styles.MainContainer}>
@@ -44,7 +48,7 @@ const Profile = () => {
         </View>
         <Button
           onPress={() => {
-            setUser(false);
+            auth().signOut();
           }}
           BtnStyle={[
             styles.BtnStyle,
