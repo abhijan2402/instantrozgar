@@ -51,7 +51,7 @@ const CreateProfile = ({navigation, route}) => {
       })
       .then(res => {
         console.log(res, 'RESPPPPPPPP');
-        refreshAuth();
+        refreshAuth(data);
       })
       .catch(err => {
         console.log(err);

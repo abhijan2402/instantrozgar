@@ -6,11 +6,12 @@ import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 import firestore from '@react-native-firebase/firestore';
 import {GlobalVariable} from '../../../App';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const AddJob = ({navigation}) => {
   const {userDetails, userID} = useContext(GlobalVariable);
   console.log('====================================');
-  console.log(userID);
+  console.log(userID, userDetails);
   console.log('====================================');
   const [JobRole, setJobRole] = useState('');
   const [Salart, setSalart] = useState(0);
@@ -18,6 +19,13 @@ const AddJob = ({navigation}) => {
   const [JobDesc, setJobDesc] = useState('');
   const [JobMode, setJobMode] = useState('');
   const [loading, setloading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([
+    {label: 'Remote', value: 'MaRemotele'},
+    {label: 'Onsite', value: 'Onsite'},
+    {label: 'Hybrid', value: 'Hybrid'},
+  ]);
   const AddJobs = async () => {
     try {
       if (
@@ -25,7 +33,7 @@ const AddJob = ({navigation}) => {
         Salart == '' ||
         MinQualification == '' ||
         JobDesc == '' ||
-        JobMode == ''
+        value == ''
       ) {
         throw 'Please fill all the required fields';
       } else {
@@ -34,9 +42,10 @@ const AddJob = ({navigation}) => {
           Salart: Salart,
           MinQualification: MinQualification,
           JobDesc: JobDesc,
-          JobMode: JobMode,
+          JobMode: value,
           status: 'Pending',
           CompanyID: userID,
+          CompanyName: userDetails?.CompanyName,
         };
         setloading(true);
         await firestore()
@@ -97,6 +106,16 @@ const AddJob = ({navigation}) => {
             setMinQualification(value);
           }}
         />
+        <DropDownPicker
+          open={open}
+          value={value}
+          items={items}
+          setOpen={setOpen}
+          setValue={setValue}
+          setItems={setItems}
+          placeholder={'Job Mode'}
+          style={{marginVertical: 10}}
+        />
         <TextInput
           multiline
           numberOfLines={5}
@@ -108,14 +127,7 @@ const AddJob = ({navigation}) => {
             setJobDesc(value);
           }}
         />
-        <TextInput
-          placeholder="Job Mode"
-          placeholderTextColor={Color.Black}
-          style={styles.Input}
-          onChangeText={value => {
-            setJobMode(value);
-          }}
-        />
+
         <Button
           onPress={() => {
             AddJobs();

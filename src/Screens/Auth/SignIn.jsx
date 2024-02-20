@@ -38,7 +38,7 @@ const SignIn = ({navigation}) => {
             .signInWithEmailAndPassword(email, password)
             .then(async userCredential => {
               console.log(userCredential.user, 'USER HERE');
-              // refreshAuth();
+              refreshAuth();
               const user = userCredential.user;
             });
         } catch (error) {

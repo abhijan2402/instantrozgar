@@ -13,6 +13,7 @@ const JobDetailBox = ({
   Mode,
   onPress,
   NoOfApplicant,
+  DESC,
 }) => {
   return (
     <View
@@ -75,11 +76,7 @@ const JobDetailBox = ({
       </View>
       <View style={{marginLeft: 5, marginTop: 5}}>
         {/* <Typoghraphy style={{fontWeight: '800'}}>Job Description</Typoghraphy> */}
-        <Typoghraphy style={styles.TextDesc}>
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry. Lorem Ipsum has been the industry's standard dummy text ever
-          since the 1500s, ....
-        </Typoghraphy>
+        <Typoghraphy style={styles.TextDesc}>{DESC}</Typoghraphy>
       </View>
 
       <Button

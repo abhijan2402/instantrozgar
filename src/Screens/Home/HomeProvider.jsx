@@ -1,13 +1,48 @@
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Header from '../../Components/Header';
 import {windowHeight} from '../../Constants/Dimension';
 import {Color} from '../../Constants/Color';
 import Typoghraphy from '../../Components/Typoghraphy';
 import JobBox from '../../Components/ProviderComp/JobBox';
 import Button from '../../Components/Button';
+import {GlobalVariable} from '../../../App';
+import firestore from '@react-native-firebase/firestore';
 
 const HomeProvider = ({navigation}) => {
+  const [JobListVal, setJobListVal] = useState([]);
+  const [ActiveJob, setActiveJob] = useState([]);
+  const [PendingJob, setPendingJob] = useState([]);
+  const [ClosedJob, setClosedJob] = useState([]);
+  const {userDetails, userID} = useContext(GlobalVariable);
+  useEffect(() => {
+    JobsList();
+  }, []);
+
+  const JobsList = async () => {
+    const resultedArray = [];
+    const performanceData = await firestore()
+      .collection('JobList')
+      .where('CompanyID', '==', userID)
+      .get();
+    performanceData.forEach(item => {
+      resultedArray.push({...item.data(), id: item.id});
+    });
+    setJobListVal(resultedArray);
+    if (resultedArray.length > 0) {
+      console.log('Hi');
+      const PendingJob = FilterData('Pending', resultedArray);
+      setPendingJob(PendingJob);
+      const ActiveJob = FilterData('Active', resultedArray);
+      setActiveJob(ActiveJob);
+      const ClosedJob = FilterData('Closed', resultedArray);
+      setClosedJob(ClosedJob);
+      console.log(PendingJob, 'pENIFN', ActiveJob, 'YHHH', ClosedJob);
+    }
+  };
+  const FilterData = (val, Arr) => {
+    return Arr.filter(item => item?.status == val);
+  };
   return (
     <View style={styles.MainContainer}>
       <Header
@@ -20,19 +55,28 @@ const HomeProvider = ({navigation}) => {
         <JobBox
           title={'Pending Jobs'}
           onPress={() => {
-            navigation.navigate('JobList', {title: 'Pending Jobs'});
+            navigation.navigate('JobList', {
+              title: 'Pending Jobs',
+              Job: PendingJob,
+            });
           }}
         />
         <JobBox
           title={'Active Jobs'}
           onPress={() => {
-            navigation.navigate('JobList', {title: 'Active Jobs'});
+            navigation.navigate('JobList', {
+              title: 'Active Jobs',
+              Job: ActiveJob,
+            });
           }}
         />
         <JobBox
           title={'Completed Jobs'}
           onPress={() => {
-            navigation.navigate('JobList', {title: 'Completed Jobs'});
+            navigation.navigate('JobList', {
+              title: 'Completed Jobs',
+              Job: ClosedJob,
+            });
           }}
         />
       </View>

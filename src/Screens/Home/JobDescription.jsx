@@ -7,15 +7,23 @@ import JobCategoryBox from '../../Components/SeekerComp/JobCategoryBox';
 import Button from '../../Components/Button';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 
-const JobDescription = () => {
+const JobDescription = ({route, navigation}) => {
+  const Data = route?.params?.JobDetail;
+  console.log(Data, 'DAAT');
   return (
     <View>
-      <Header title={'Job Details'} leftIcon={true} />
+      <Header
+        title={'Job Details'}
+        leftIcon={true}
+        onPress={() => {
+          navigation.goBack();
+        }}
+      />
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.DetailsContainer}>
         <Typoghraphy size={25} color={Color.Purple} fontWeight="600">
-          React Native developer
+          {Data?.JobRole}
         </Typoghraphy>
         <Typoghraphy size={13} color={Color.Black} fontWeight="400">
           Salemon Private limited
@@ -46,7 +54,7 @@ const JobDescription = () => {
             }}
             style={{width: 15, height: 15}}
           />
-          <Typoghraphy style={styles.TextDesc}>IT Sector</Typoghraphy>
+          <Typoghraphy style={styles.TextDesc}> {Data?.JobRole}</Typoghraphy>
         </View>
         <View style={styles.JobDesc}>
           <Image
@@ -55,7 +63,7 @@ const JobDescription = () => {
             }}
             style={{width: 15, height: 15}}
           />
-          <Typoghraphy style={styles.TextDesc}>60000</Typoghraphy>
+          <Typoghraphy style={styles.TextDesc}>{Data?.Salart}</Typoghraphy>
         </View>
         <View style={styles.JobDesc}>
           <Image
@@ -64,7 +72,7 @@ const JobDescription = () => {
             }}
             style={{width: 15, height: 15}}
           />
-          <Typoghraphy style={styles.TextDesc}>Hybrid</Typoghraphy>
+          <Typoghraphy style={styles.TextDesc}>{Data?.JobMode}</Typoghraphy>
         </View>
         <View style={styles.JobDesc}>
           <Image
@@ -77,17 +85,7 @@ const JobDescription = () => {
         </View>
         <View style={{marginLeft: 5, marginTop: 5}}>
           {/* <Typoghraphy style={{fontWeight: '800'}}>Job Description</Typoghraphy> */}
-          <Typoghraphy style={styles.TextDesc}>
-            Lorem Ipsum is simply dummy text of the printing and typesetting
-            industry. Lorem Ipsum has been the industry's standard dummy text
-            ever since the 1500s, when an unknown printer took a galley of type
-            and scrambled it to make a type specimen book. It has survived not
-            only five centuries, but also the leap into electronic typesetting,
-            remaining essentially unchanged. It was popularised in the 1960s
-            with the release of Letraset sheets containing Lorem Ipsum passages,
-            and more recently with desktop publishing software like Aldus
-            PageMaker including versions of Lorem Ipsum
-          </Typoghraphy>
+          <Typoghraphy style={styles.TextDesc}>{Data?.JobDesc}</Typoghraphy>
         </View>
         <View>
           <Typoghraphy
