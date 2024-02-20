@@ -21,7 +21,7 @@ import firestore from '@react-native-firebase/firestore';
 const CreateProfileRecruter = ({ route }) => {
     const { userDetails, refreshAuth } = useContext(GlobalVariable)
     const data = route?.params?.userID
-    console.log(userDetails, data, "USER___DETAILS");
+    // console.log(userDetails, data, "USER___DETAILS");
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([
@@ -35,25 +35,38 @@ const CreateProfileRecruter = ({ route }) => {
     const [city, setcity] = useState(null)
     const [Certificate, setCertificate] = useState(null)
     const [CompanyAddress, setCompanyAddress] = useState(null)
-
+    const [loading, setloading] = useState(false)
 
     const UpdateData = async () => {
-        const Update = await firestore()
-            .collection('Seeker')
-            .doc(data)
-            .update({
-                CompanyName: CompanyName,
-                CompanyMail: CompanyMail,
-                Certificate: Certificate,
-                CompanyAddress: CompanyAddress,
-                city: city,
-            })
-            .then(async (res) => {
-                console.log(res, "RESPPPPPPPP");
-                refreshAuth(data)
-            }).catch((err) => {
-                console.log(err);
-            })
+        console.log("Hi");
+        try {
+            if (CompanyName == null || CompanyMail == null || CompanyAddress == null || Certificate == null) {
+                throw "Please fill all required details"
+            }
+            else {
+                setloading(true)
+                const Update = await firestore()
+                    .collection('Seeker')
+                    .doc(data)
+                    .update({
+                        CompanyName: CompanyName,
+                        CompanyMail: CompanyMail,
+                        Certificate: Certificate,
+                        CompanyAddress: CompanyAddress,
+                        city: city,
+                    })
+                    .then(async (res) => {
+                        console.log(res, "RESPPPPPPPP");
+                        refreshAuth(data)
+                    }).catch((err) => {
+                        console.log(err);
+                    })
+            }
+        } catch (error) {
+            alert(error)
+        } finally {
+            setloading(false)
+        }
 
     }
     return (
@@ -136,6 +149,7 @@ const CreateProfileRecruter = ({ route }) => {
                     can post the jobs.
                 </Typoghraphy>
                 <Button
+                    loading={loading}
                     onPress={() => {
                         UpdateData()
                     }}

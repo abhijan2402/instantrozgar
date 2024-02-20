@@ -19,9 +19,6 @@ import auth from '@react-native-firebase/auth';
 const ProfileCompany = () => {
   const {setUser} = useContext(GlobalVariable);
   const {userDetails} = useContext(GlobalVariable);
-  console.log('====================================');
-  console.log(userDetails, 'USER');
-  console.log('====================================');
 
   return (
     <View style={styles.MainContainer}>
@@ -81,6 +78,7 @@ const ProfileCompany = () => {
         </View>
         <Button
           onPress={() => {
+            setUser(false);
             auth().signOut();
           }}
           BtnStyle={[

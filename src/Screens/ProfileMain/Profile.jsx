@@ -49,6 +49,7 @@ const Profile = () => {
         <Button
           onPress={() => {
             auth().signOut();
+            setUser(false);
           }}
           BtnStyle={[
             styles.BtnStyle,

@@ -1,4 +1,11 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {
+  ActivityIndicator,
+  RefreshControl,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import React, {useContext, useEffect, useState} from 'react';
 import Header from '../../Components/Header';
 import {windowHeight} from '../../Constants/Dimension';
@@ -15,11 +22,15 @@ const HomeProvider = ({navigation}) => {
   const [PendingJob, setPendingJob] = useState([]);
   const [ClosedJob, setClosedJob] = useState([]);
   const {userDetails, userID} = useContext(GlobalVariable);
+  const [Loader, setLoader] = useState(false);
+  const [refreshing, setRefreshing] = React.useState(false);
+
   useEffect(() => {
     JobsList();
   }, []);
 
   const JobsList = async () => {
+    setLoader(true);
     const resultedArray = [];
     const performanceData = await firestore()
       .collection('JobList')
@@ -28,6 +39,7 @@ const HomeProvider = ({navigation}) => {
     performanceData.forEach(item => {
       resultedArray.push({...item.data(), id: item.id});
     });
+    setLoader(false);
     setJobListVal(resultedArray);
     if (resultedArray.length > 0) {
       console.log('Hi');
@@ -43,6 +55,13 @@ const HomeProvider = ({navigation}) => {
   const FilterData = (val, Arr) => {
     return Arr.filter(item => item?.status == val);
   };
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    JobsList();
+    setTimeout(() => {
+      setRefreshing(false);
+    }, 2000);
+  }, []);
   return (
     <View style={styles.MainContainer}>
       <Header
@@ -51,35 +70,45 @@ const HomeProvider = ({navigation}) => {
           navigation.goBack();
         }}
       />
-      <View style={styles.BodyContainer}>
-        <JobBox
-          title={'Pending Jobs'}
-          onPress={() => {
-            navigation.navigate('JobList', {
-              title: 'Pending Jobs',
-              Job: PendingJob,
-            });
-          }}
-        />
-        <JobBox
-          title={'Active Jobs'}
-          onPress={() => {
-            navigation.navigate('JobList', {
-              title: 'Active Jobs',
-              Job: ActiveJob,
-            });
-          }}
-        />
-        <JobBox
-          title={'Completed Jobs'}
-          onPress={() => {
-            navigation.navigate('JobList', {
-              title: 'Completed Jobs',
-              Job: ClosedJob,
-            });
-          }}
-        />
-      </View>
+      {Loader ? (
+        <View style={{height: windowHeight / 1.5, justifyContent: 'center'}}>
+          <ActivityIndicator size={40} color={Color.Purple} />
+        </View>
+      ) : (
+        <ScrollView
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+          style={styles.BodyContainer}>
+          <JobBox
+            title={'Pending Jobs'}
+            onPress={() => {
+              navigation.navigate('JobList', {
+                title: 'Pending Jobs',
+                Job: PendingJob,
+              });
+            }}
+          />
+          <JobBox
+            title={'Active Jobs'}
+            onPress={() => {
+              navigation.navigate('JobList', {
+                title: 'Active Jobs',
+                Job: ActiveJob,
+              });
+            }}
+          />
+          <JobBox
+            title={'Completed Jobs'}
+            onPress={() => {
+              navigation.navigate('JobList', {
+                title: 'Completed Jobs',
+                Job: ClosedJob,
+              });
+            }}
+          />
+        </ScrollView>
+      )}
       <Button
         title={'+'}
         BtnStyle={styles.BtnStyleMain}
