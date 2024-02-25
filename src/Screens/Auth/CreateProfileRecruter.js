@@ -25,8 +25,20 @@ const CreateProfileRecruter = ({ route }) => {
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([
-        { label: 'Male', value: 'Male' },
-        { label: 'Female', value: 'Female' },
+        { label: 'Delhi', value: 'Delhi' },
+        { label: 'Noida', value: 'Noida' },
+        { label: 'Gurgaon', value: 'Gurgaon' },
+        { label: 'Bangalore', value: 'Bangalore' },
+        { label: 'Kolkata', value: 'Kolkata' },
+        { label: 'Bhopal', value: 'Bhopal' },
+        { label: 'Ahmedabad', value: 'Ahmedabad' },
+        { label: 'Jaipur', value: 'Jaipur' },
+        { label: 'Mohali', value: 'Mohali' },
+        { label: 'Hyderabad', value: 'Hyderabad' },
+        { label: 'Indore', value: 'Indore' },
+        { label: 'Lucknow', value: 'Lucknow' },
+        { label: 'Pune', value: 'Pune' },
+
     ]);
     const [date, setDate] = useState(new Date());
     const [open1, setOpen1] = useState(false);
@@ -103,7 +115,7 @@ const CreateProfileRecruter = ({ route }) => {
                     }}
                 />
 
-                <DropDownPicker
+                {/* <DropDownPicker
                     open={open}
                     value={value}
                     items={items}
@@ -112,7 +124,7 @@ const CreateProfileRecruter = ({ route }) => {
                     setItems={setItems}
                     placeholder={'Select State'}
                     style={{ marginVertical: 10 }}
-                />
+                /> */}
                 <DropDownPicker
                     open={open}
                     value={value}

@@ -28,8 +28,25 @@ const CreateProfile = ({navigation, route}) => {
     {label: 'Male', value: 'Male'},
     {label: 'Female', value: 'Female'},
   ]);
-  const [date, setDate] = useState(new Date());
   const [open1, setOpen1] = useState(false);
+  const [value1, setValue1] = useState(null);
+  const [items1, setItems1] = useState([
+    {label: 'Delhi', value: 'Delhi'},
+    {label: 'Noida', value: 'Noida'},
+    {label: 'Gurgaon', value: 'Gurgaon'},
+    {label: 'Bangalore', value: 'Bangalore'},
+    {label: 'Kolkata', value: 'Kolkata'},
+    {label: 'Bhopal', value: 'Bhopal'},
+    {label: 'Ahmedabad', value: 'Ahmedabad'},
+    {label: 'Jaipur', value: 'Jaipur'},
+    {label: 'Mohali', value: 'Mohali'},
+    {label: 'Hyderabad', value: 'Hyderabad'},
+    {label: 'Indore', value: 'Indore'},
+    {label: 'Lucknow', value: 'Lucknow'},
+    {label: 'Pune', value: 'Pune'},
+  ]);
+  const [date, setDate] = useState(new Date());
+  const [open2, setOpen2] = useState(false);
   const [Name, setName] = useState(null);
   const [HighestQualification, setHighestQualification] = useState(null);
   const [YearGraduation, setYearGraduation] = useState(null);
@@ -48,6 +65,8 @@ const CreateProfile = ({navigation, route}) => {
         skills: skills,
         Resume: Resume,
         Gender: value,
+        Cities: items1,
+        DOB: date,
       })
       .then(res => {
         console.log(res, 'RESPPPPPPPP');
@@ -62,15 +81,15 @@ const CreateProfile = ({navigation, route}) => {
       <Header title={'Create Profile'} leftIcon={true} />
       <DatePicker
         modal
-        open={open1}
+        open={open2}
         date={date}
         onConfirm={date => {
-          setOpen1(false);
+          setOpen2(false);
           setDate(date);
         }}
         mode="date"
         onCancel={() => {
-          setOpen1(false);
+          setOpen2(false);
         }}
       />
       <View style={styles.InputContainer}>
@@ -99,6 +118,7 @@ const CreateProfile = ({navigation, route}) => {
             setYearGraduation(value);
           }}
         />
+
         <DropDownPicker
           open={open}
           value={value}
@@ -119,10 +139,20 @@ const CreateProfile = ({navigation, route}) => {
             marginVertical: 10,
           }}
           onPress={() => {
-            setOpen1(true);
+            setOpen2(true);
           }}>
           <Typoghraphy color={Color.Black}>Date of birth</Typoghraphy>
         </TouchableOpacity>
+        <DropDownPicker
+          open={open1}
+          value={value1}
+          items={items1}
+          setOpen={setOpen1}
+          setValue={setValue1}
+          setItems={setItems1}
+          placeholder={'Select City'}
+          style={{marginVertical: 10}}
+        />
         <TextInput
           placeholder="Skills"
           placeholderTextColor={Color.Black}
@@ -132,7 +162,7 @@ const CreateProfile = ({navigation, route}) => {
             setskills(value);
           }}
         />
-        <DropDownPicker
+        {/* <DropDownPicker
           open={open}
           value={value}
           items={items}
@@ -141,17 +171,8 @@ const CreateProfile = ({navigation, route}) => {
           setItems={setItems}
           placeholder={'Select State'}
           style={{marginVertical: 10}}
-        />
-        <DropDownPicker
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
-          placeholder={'Select City'}
-          style={{marginVertical: 10}}
-        />
+        /> */}
+
         <TextInput
           placeholder="Resume"
           placeholderTextColor={Color.Black}
