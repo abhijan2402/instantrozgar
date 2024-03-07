@@ -5,6 +5,7 @@ import {
     View,
     TextInput,
     TouchableOpacity,
+    Image
 } from 'react-native';
 import React, { useContext, useState } from 'react';
 import { windowHeight, windowWidth } from '../../Constants/Dimension';
@@ -17,7 +18,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 import { GlobalVariable } from '../../../App';
 import firestore from '@react-native-firebase/firestore';
-
+import DocumentPicker from 'react-native-document-picker';
+import storage from '@react-native-firebase/storage';
 const CreateProfileRecruter = ({ route }) => {
     const { userDetails, refreshAuth } = useContext(GlobalVariable)
     const data = route?.params?.userID
@@ -48,6 +50,35 @@ const CreateProfileRecruter = ({ route }) => {
     const [Certificate, setCertificate] = useState(null)
     const [CompanyAddress, setCompanyAddress] = useState(null)
     const [loading, setloading] = useState(false)
+
+    const [fileResponse, setFileResponse] = useState([]);
+    const UplaodFile = async () => {
+        const reference = storage().ref('/myfiles/mycollection/my-file.txt');
+        const task = reference.putFile(localFilePath);
+        // const task = reference.putFile(pathToFile);
+        task.on('state_changed', taskSnapshot => {
+            console.log(`${taskSnapshot.bytesTransferred} transferred 
+      out of ${taskSnapshot.totalBytes}`);
+        });
+        task.then(() => {
+            console.log('Image uploaded to the bucket!');
+        });
+        const url = await storage()
+            .ref('images/profile-1.png')
+            .getDownloadURL();
+    }
+    const handleDocumentSelection = async () => {
+        try {
+            const response = await DocumentPicker.pick({
+                presentationStyle: 'fullScreen',
+                type: [DocumentPicker.types.pdf],
+            });
+            console.log(response[0]?.name);
+            setFileResponse(response[0]?.name);
+        } catch (err) {
+            console.warn(err);
+        }
+    };
 
     const UpdateData = async () => {
         console.log("Hi");
@@ -143,15 +174,31 @@ const CreateProfileRecruter = ({ route }) => {
                         setCompanyAddress(value);
                     }}
                 />
-                <TextInput
-                    placeholder="Company Registration Certificate"
-                    placeholderTextColor={Color.Black}
-                    style={styles.Input}
-                    keyboardType="numeric"
-                    onChangeText={value => {
-                        setCertificate(value);
+                <TouchableOpacity
+                    style={{
+                        borderWidth: 1,
+                        borderRadius: 8,
+                        height: 52,
+                        justifyContent: 'center',
+                        paddingHorizontal: 10,
+                        marginVertical: 10,
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
                     }}
-                />
+                    onPress={handleDocumentSelection}>
+                    <Typoghraphy color={Color.Black}>
+                        {fileResponse.length == 0 ? 'Company Registration Certificate' : fileResponse}
+                    </Typoghraphy>
+                    <Image
+                        source={{
+                            uri: 'https://cdn-icons-png.flaticon.com/128/1665/1665680.png',
+                        }}
+                        style={{ width: 25, height: 25 }}
+                    />
+                </TouchableOpacity>
+
                 <Typoghraphy
                     style={{ marginHorizontal: 5 }}
                     size={13}

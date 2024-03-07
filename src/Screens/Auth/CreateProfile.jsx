@@ -5,6 +5,7 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  Image,
 } from 'react-native';
 import React, {useContext, useState} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
@@ -17,7 +18,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 import {GlobalVariable} from '../../../App';
 import firestore from '@react-native-firebase/firestore';
-
+import DocumentPicker from 'react-native-document-picker';
 const CreateProfile = ({navigation, route}) => {
   const {setUser, refreshAuth} = useContext(GlobalVariable);
   const data = route?.params?.userID;
@@ -53,6 +54,21 @@ const CreateProfile = ({navigation, route}) => {
   const [DOB, setDOB] = useState(null);
   const [skills, setskills] = useState(null);
   const [Resume, setResume] = useState(null);
+
+  const [fileResponse, setFileResponse] = useState([]);
+
+  const handleDocumentSelection = async () => {
+    try {
+      const response = await DocumentPicker.pick({
+        presentationStyle: 'fullScreen',
+        type: [DocumentPicker.types.pdf],
+      });
+      console.log(response[0]?.name);
+      setFileResponse(response[0]?.name);
+    } catch (err) {
+      console.warn(err);
+    }
+  };
 
   const UpdateData = async () => {
     const Update = await firestore()
@@ -172,16 +188,31 @@ const CreateProfile = ({navigation, route}) => {
           placeholder={'Select State'}
           style={{marginVertical: 10}}
         /> */}
-
-        <TextInput
-          placeholder="Resume"
-          placeholderTextColor={Color.Black}
-          style={styles.Input}
-          keyboardType="numeric"
-          onChangeText={value => {
-            setResume(value);
+        <TouchableOpacity
+          style={{
+            borderWidth: 1,
+            borderRadius: 8,
+            height: 52,
+            justifyContent: 'center',
+            paddingHorizontal: 10,
+            marginVertical: 10,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
           }}
-        />
+          onPress={handleDocumentSelection}>
+          <Typoghraphy color={Color.Black}>
+            {fileResponse.length == 0 ? 'Resume' : fileResponse}
+          </Typoghraphy>
+          <Image
+            source={{
+              uri: 'https://cdn-icons-png.flaticon.com/128/1665/1665680.png',
+            }}
+            style={{width: 25, height: 25}}
+          />
+        </TouchableOpacity>
+
         <Button
           onPress={() => {
             UpdateData();
