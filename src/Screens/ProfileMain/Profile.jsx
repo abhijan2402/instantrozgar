@@ -25,27 +25,50 @@ const Profile = () => {
           style={{width: 90, height: 90, alignSelf: 'center'}}
         />
         <Typoghraphy size={15} color={Color.Black} fontWeight="700">
-          Abhishek Jangid
+          {userDetails?.Name}
         </Typoghraphy>
         <Typoghraphy size={15} color={Color.Black} fontWeight="700">
-          +91-7976114618
+          {userDetails?.Number}
         </Typoghraphy>
         <View style={[styles.InfoBox, {marginTop: 20}]}>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="700">
-            Qualification : Btech Computer Science
+          <Typoghraphy
+            style={styles.TextInfo}
+            size={15}
+            color={Color.Black}
+            fontWeight="700">
+            Qualification : {userDetails?.HighestQualification}
           </Typoghraphy>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="700">
-            Skills : Btech Computer Science
+          <Typoghraphy
+            style={styles.TextInfo}
+            size={15}
+            color={Color.Black}
+            fontWeight="700">
+            Skills :
           </Typoghraphy>
-        </View>
-        <View style={styles.InfoBox}>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="600">
-            State : Rajasthan
-          </Typoghraphy>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="600">
+          {userDetails?.skills?.map((i, index) => (
+            <Typoghraphy
+              style={[styles.TextInfo, {marginLeft: 10}]}
+              size={15}
+              color={Color.Purple}
+              fontWeight="400">
+              {index + 1}.{` `}
+              {i?.name}
+            </Typoghraphy>
+          ))}
+
+          <Typoghraphy
+            style={styles.TextInfo}
+            size={15}
+            color={Color.Black}
+            fontWeight="600">
             City : Jaipur
           </Typoghraphy>
         </View>
+        {/* <View style={styles.InfoBox}>
+          <Typoghraphy size={15} color={Color.Black} fontWeight="600">
+            State : Rajasthan
+          </Typoghraphy>
+        </View> */}
         <Button
           onPress={() => {
             auth().signOut();
@@ -98,5 +121,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     color: Color.White,
+  },
+  TextInfo: {
+    marginVertical: 5,
   },
 });

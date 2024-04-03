@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import React from 'react';
 import Header from '../Header';
 import JobDetailBox from './JobDetailBox';
@@ -8,7 +8,6 @@ import {Color} from '../../Constants/Color';
 
 const JobList = ({route, navigation}) => {
   const List = route?.params?.Job;
-  console.log(List, 'LIst');
   return (
     <View>
       <Header
@@ -18,7 +17,9 @@ const JobList = ({route, navigation}) => {
           navigation.goBack();
         }}
       />
-      <View style={{marginHorizontal: 20}}>
+      <ScrollView
+        style={{marginHorizontal: 20, marginBottom: 50}}
+        showsVerticalScrollIndicator={false}>
         {List.length == 0 ? (
           <View
             style={{
@@ -40,15 +41,15 @@ const JobList = ({route, navigation}) => {
                 MinExp={'3 years'}
                 Mode={item?.JobMode}
                 NoOfApplicant={0}
-                DESC={item?.JobDesc}
+                DESC={item?.JobDesc.slice(0, 300)}
                 onPress={() => {
-                  navigation.navigate('ListApplicant');
+                  navigation.navigate('ListApplicant', {item: item});
                 }}
               />
             );
           })
         )}
-      </View>
+      </ScrollView>
     </View>
   );
 };

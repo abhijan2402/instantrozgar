@@ -1,4 +1,4 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, Pressable} from 'react-native';
 import React from 'react';
 import {Color} from '../../Constants/Color';
 import Typoghraphy from '../Typoghraphy';
@@ -14,16 +14,18 @@ const JobCategoryBox = ({
   Desc,
 }) => {
   return (
-    <View
+    <Pressable
+      onPress={onPress}
       style={{
-        // borderWidth: 0.3,
+        borderWidth: 0.3,
         borderColor: Color.Purple,
         backgroundColor: Color.White,
         borderRadius: 5,
         padding: 5,
         marginVertical: 8,
-        elevation: 10,
+        elevation: 15,
         shadowColor: Color.ThemeBlue,
+        marginHorizontal: 10,
       }}>
       <Typoghraphy size={16} color={Color.Black} fontWeight="700">
         {CompanyName}
@@ -68,13 +70,20 @@ const JobCategoryBox = ({
         {/* <Typoghraphy style={{fontWeight: '800'}}>Job Description</Typoghraphy> */}
         <Typoghraphy style={styles.TextDesc}>{Desc}</Typoghraphy>
       </View>
-      <Button
+      <Typoghraphy
+        size={15}
+        color={Color.Purple}
+        fontWeight="700"
+        style={{textAlign: 'right', margin: 10}}>
+        Apply Now
+      </Typoghraphy>
+      {/* <Button
         title={'Apply'}
         BtnStyle={styles.Btn}
         BtnTxtStyle={styles.BtnTXt}
         onPress={onPress}
-      />
-    </View>
+      /> */}
+    </Pressable>
   );
 };
 
@@ -100,6 +109,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 10,
     backgroundColor: Color.ThemeBlue,
+    marginVertical: 10,
   },
   BtnTXt: {
     color: Color.White,

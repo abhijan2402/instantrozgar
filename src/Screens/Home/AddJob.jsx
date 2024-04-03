@@ -7,12 +7,11 @@ import Button from '../../Components/Button';
 import firestore from '@react-native-firebase/firestore';
 import {GlobalVariable} from '../../../App';
 import DropDownPicker from 'react-native-dropdown-picker';
+import {ValidateNumber} from '../../utils/Validators';
 
 const AddJob = ({navigation}) => {
   const {userDetails, userID} = useContext(GlobalVariable);
-  console.log('====================================');
-  console.log(userID, userDetails);
-  console.log('====================================');
+  console.log(userDetails);
   const [JobRole, setJobRole] = useState('');
   const [Salart, setSalart] = useState(0);
   const [MinQualification, setMinQualification] = useState('');
@@ -21,8 +20,9 @@ const AddJob = ({navigation}) => {
   const [loading, setloading] = useState(false);
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
+  const [MinExp, setMinExp] = useState(null);
   const [items, setItems] = useState([
-    {label: 'Remote', value: 'MaRemotele'},
+    {label: 'Remote', value: 'Remote'},
     {label: 'Onsite', value: 'Onsite'},
     {label: 'Hybrid', value: 'Hybrid'},
   ]);
@@ -33,9 +33,14 @@ const AddJob = ({navigation}) => {
         Salart == '' ||
         MinQualification == '' ||
         JobDesc == '' ||
-        value == ''
+        value == '' ||
+        MinExp == ''
       ) {
         throw 'Please fill all the required fields';
+      } else if (!ValidateNumber(Salart)) {
+        throw 'Salary must be in number format only.';
+      } else if (!ValidateNumber(MinExp)) {
+        throw 'Minimum Experience must be in number format only.';
       } else {
         const data = {
           JobRole: JobRole,
@@ -46,6 +51,9 @@ const AddJob = ({navigation}) => {
           status: 'Pending',
           CompanyID: userID,
           CompanyName: userDetails?.CompanyName,
+          MinExp: MinExp,
+          City: userDetails?.city,
+          CompanyAddress: userDetails?.CompanyAddress,
         };
         setloading(true);
         await firestore()
@@ -90,12 +98,21 @@ const AddJob = ({navigation}) => {
           }}
         />
         <TextInput
-          placeholder="Salary"
+          placeholder="Salary (per month)"
           placeholderTextColor={Color.Black}
           style={styles.Input}
           keyboardType="numeric"
           onChangeText={value => {
             setSalart(value);
+          }}
+        />
+        <TextInput
+          placeholder="Min Exp"
+          placeholderTextColor={Color.Black}
+          style={styles.Input}
+          keyboardType="numeric"
+          onChangeText={value => {
+            setMinExp(value);
           }}
         />
         <TextInput

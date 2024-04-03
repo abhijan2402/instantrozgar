@@ -1,17 +1,78 @@
 import {StyleSheet, Text, View, Image, ScrollView} from 'react-native';
-import React from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Header from '../../Components/Header';
 import Typoghraphy from '../../Components/Typoghraphy';
 import {Color} from '../../Constants/Color';
 import JobCategoryBox from '../../Components/SeekerComp/JobCategoryBox';
 import Button from '../../Components/Button';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
+import firestore from '@react-native-firebase/firestore';
+import {GlobalVariable} from '../../../App';
 
 const JobDescription = ({route, navigation}) => {
   const Data = route?.params?.JobDetail;
-  console.log(Data, 'DAAT');
+  const {setUser, userDetails, userID} = useContext(GlobalVariable);
+  const [BtnText, setBtnText] = useState('Apply Now');
+  const [disble, setdisble] = useState(false);
+
+  const [loading, setloading] = useState(false);
+  useEffect(() => {
+    GetAppliedCandidate();
+  }, []);
+
+  const GetAppliedCandidate = async () => {
+    const resultedArray = [];
+    const performanceData = await firestore()
+      .collection('AppliedJobs')
+      .where('Jobid', '==', Data?.id)
+      .where('ApplicantId', '==', userID)
+      .get();
+    performanceData.forEach(item => {
+      resultedArray.push({...item.data(), id: item.id});
+    });
+    console.log(resultedArray, 'RESSUUU');
+    if (resultedArray.length > 0) {
+      setdisble(true);
+      setBtnText('Already Applied');
+    }
+  };
+  const ApplyJob = async () => {
+    try {
+      const data = {
+        Jobid: Data?.id,
+        ApplicantId: userID,
+        CompanyId: Data?.CompanyID,
+        UserEmail: userDetails?.email,
+        UserQualification: userDetails?.HighestQualification,
+        UserSkills: userDetails?.skills,
+        UserContact: userDetails?.Number,
+        Resume: userDetails?.Resume,
+      };
+      console.log(data);
+      setloading(true);
+      await firestore()
+        .collection('AppliedJobs')
+        .add(data)
+        .then(res => {
+          alert('Applied for the job');
+          navigation.goBack();
+          setloading(false);
+        })
+        .catch(err => {
+          console.log(err, 'ERRORR');
+          setloading(false);
+        })
+        .finally(() => {
+          setloading(false);
+        });
+    } catch (error) {
+      setloading(false);
+      alert(error);
+      console.log(error);
+    }
+  };
   return (
-    <View>
+    <View style={{backgroundColor: Color.White, height: windowHeight}}>
       <Header
         title={'Job Details'}
         leftIcon={true}
@@ -26,7 +87,7 @@ const JobDescription = ({route, navigation}) => {
           {Data?.JobRole}
         </Typoghraphy>
         <Typoghraphy size={13} color={Color.Black} fontWeight="400">
-          Salemon Private limited
+          {Data?.CompanyName}
         </Typoghraphy>
         <View style={styles.JobLoc}>
           <Image
@@ -36,7 +97,7 @@ const JobDescription = ({route, navigation}) => {
             style={{width: 15, height: 15}}
           />
           <Typoghraphy size={13} color={Color.Black} fontWeight="400">
-            Central Spine, Noida
+            {Data?.CompanyAddress}
           </Typoghraphy>
         </View>
         <Typoghraphy
@@ -81,48 +142,23 @@ const JobDescription = ({route, navigation}) => {
             }}
             style={{width: 15, height: 15}}
           />
-          <Typoghraphy style={styles.TextDesc}>3 years</Typoghraphy>
+          <Typoghraphy style={styles.TextDesc}>
+            {Data?.MinExp} years
+          </Typoghraphy>
         </View>
         <View style={{marginLeft: 5, marginTop: 5}}>
-          {/* <Typoghraphy style={{fontWeight: '800'}}>Job Description</Typoghraphy> */}
           <Typoghraphy style={styles.TextDesc}>{Data?.JobDesc}</Typoghraphy>
-        </View>
-        <View>
-          <Typoghraphy
-            size={20}
-            color={Color.Black}
-            fontWeight="600"
-            style={{marginTop: 15}}>
-            Benefits
-          </Typoghraphy>
-          <Typoghraphy>1) dusuidhs fsin</Typoghraphy>
-          <Typoghraphy>1) dusuidhs fsin</Typoghraphy>
-          <Typoghraphy>1) dusuidhs fsin</Typoghraphy>
-          <Typoghraphy>1) dusuidhs fsin</Typoghraphy>
-          <Typoghraphy>1) dusuidhs fsin</Typoghraphy>
-          <Typoghraphy>1) dusuidhs fsin</Typoghraphy>
-          <Typoghraphy>1) dusuidhs fsin</Typoghraphy>
-          <Typoghraphy>1) dusuidhs fsin</Typoghraphy>
         </View>
         <Button
           BtnStyle={[
             styles.BtnStyle,
             {borderWidth: 2, borderColor: Color.ThemeBlue, marginTop: 20},
           ]}
+          disabled={disble}
+          loading={loading}
+          onPress={ApplyJob}
           BtnTxtStyle={[styles.BtnTxtStyle]}
-          title={'Call HR'}
-        />
-        <Button
-          BtnStyle={[
-            styles.BtnStyle,
-            {
-              borderWidth: 2,
-              borderColor: Color.ThemeBlue,
-              backgroundColor: Color.White,
-            },
-          ]}
-          BtnTxtStyle={[styles.BtnTxtStyle, {color: Color.ThemeBlue}]}
-          title={'Apply Now'}
+          title={BtnText}
         />
       </ScrollView>
     </View>
@@ -134,6 +170,7 @@ export default JobDescription;
 const styles = StyleSheet.create({
   DetailsContainer: {
     marginHorizontal: 20,
+    marginBottom: 70,
     // height: windowHeight / 1,
   },
   JobLoc: {

@@ -3,4 +3,5 @@ export const Color = {
   White: 'white',
   ThemeBlue: '#78a8f5',
   Purple: '#312d6b',
+  Grey: '#A9A9AC',
 };

@@ -22,6 +22,8 @@ import { Color } from './src/Constants/Color';
 export const GlobalVariable = createContext();
 const App = () => {
   const [user, setUser] = useState(false);
+  const [profileTrue, setprofileTrue] = useState(false)
+  const [JobSeeker, setJobSeeker] = useState(false)
   const [userDetails, setUserDetails] = useState(null);
   const [userID, setuserID] = useState(null);
 
@@ -46,6 +48,8 @@ const App = () => {
             setUser(true);
             setUserDetails(res?._data);
             setuserID(userNew);
+            setprofileTrue(true)
+
 
             setLoading(false);
           } else {
@@ -79,6 +83,19 @@ const App = () => {
         .doc(auth().currentUser.uid)
         .get();
       console.log(userData._data, 'data');
+      if (userData._data?.isProfileComplete == 0) {
+        setUser(true)
+        if (userData._data?.type == "Providing") {
+          setprofileTrue(false)
+          setJobSeeker(false)
+        }
+        else {
+          setprofileTrue(false)
+          setJobSeeker(true)
+
+        }
+      }
+
       if (userData._data == undefined || userData == undefined) {
         setUser(false);
         setLoading(false);
@@ -134,7 +151,7 @@ const App = () => {
             headerShown: false,
           }}
           initialRouteName="BottomTab">
-          {user ? (
+          {user && profileTrue ? (
             <>
               <Stack.Screen name="BottomTab" component={BottomTab} />
               <Stack.Screen name="JobDescription" component={JobDescription} />
@@ -143,16 +160,26 @@ const App = () => {
               <Stack.Screen name="ListApplicant" component={ListApplicant} />
             </>
           ) : (
-            <>
-              <Stack.Screen name="Selection" component={Selection} />
+            !profileTrue && JobSeeker ?
+
               <Stack.Screen name="CreateProfile" component={CreateProfile} />
-              <Stack.Screen
-                name="CreateProfileRecruter"
-                component={CreateProfileRecruter}
-              />
-              <Stack.Screen name="SignIn" component={SignIn} />
-              <Stack.Screen name="SignUp" component={SignUp} />
-            </>
+              :
+              !profileTrue && !JobSeeker && user ?
+                <Stack.Screen
+                  name="CreateProfileRecruter"
+                  component={CreateProfileRecruter}
+                />
+                :
+                <>
+                  <Stack.Screen name="Selection" component={Selection} />
+                  <Stack.Screen name="CreateProfile" component={CreateProfile} />
+                  <Stack.Screen
+                    name="CreateProfileRecruter"
+                    component={CreateProfileRecruter}
+                  />
+                  <Stack.Screen name="SignIn" component={SignIn} />
+                  <Stack.Screen name="SignUp" component={SignUp} />
+                </>
           )}
         </Stack.Navigator>
       </NavigationContainer>

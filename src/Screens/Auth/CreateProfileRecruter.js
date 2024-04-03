@@ -20,6 +20,9 @@ import { GlobalVariable } from '../../../App';
 import firestore from '@react-native-firebase/firestore';
 import DocumentPicker from 'react-native-document-picker';
 import storage from '@react-native-firebase/storage';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { validateEmail } from '../../utils/Validators';
+
 const CreateProfileRecruter = ({ route }) => {
     const { userDetails, refreshAuth } = useContext(GlobalVariable)
     const data = route?.params?.userID
@@ -53,53 +56,77 @@ const CreateProfileRecruter = ({ route }) => {
 
     const [fileResponse, setFileResponse] = useState([]);
     const UplaodFile = async () => {
-        const reference = storage().ref('/myfiles/mycollection/my-file.txt');
-        const task = reference.putFile(localFilePath);
-        // const task = reference.putFile(pathToFile);
-        task.on('state_changed', taskSnapshot => {
-            console.log(`${taskSnapshot.bytesTransferred} transferred 
-      out of ${taskSnapshot.totalBytes}`);
-        });
-        task.then(() => {
-            console.log('Image uploaded to the bucket!');
-        });
-        const url = await storage()
-            .ref('images/profile-1.png')
-            .getDownloadURL();
+        console.log(fileResponse, 'FILERESPONDRE');
+        const options = {
+            media: 'photo',
+        };
+        const result = await launchImageLibrary(options);
+        console.log(result.assets[0].uri, 'RESULT');
+        setFileResponse(result?.assets[0]);
     }
-    const handleDocumentSelection = async () => {
+    // const handleDocumentSelection = async () => {
+    //     try {
+    //         const response = await DocumentPicker.pick({
+    //             presentationStyle: 'fullScreen',
+    //             type: [DocumentPicker.types.pdf],
+    //         });
+    //         console.log(response[0]?.name);
+    //         setFileResponse(response[0]?.name);
+    //     } catch (err) {
+    //         console.warn(err);
+    //     }
+    // };
+    const UploadFile_Image = async () => {
+        console.log(fileResponse);
         try {
-            const response = await DocumentPicker.pick({
-                presentationStyle: 'fullScreen',
-                type: [DocumentPicker.types.pdf],
-            });
-            console.log(response[0]?.name);
-            setFileResponse(response[0]?.name);
-        } catch (err) {
-            console.warn(err);
-        }
-    };
-
-    const UpdateData = async () => {
-        console.log("Hi");
-        try {
-            if (CompanyName == null || CompanyMail == null || CompanyAddress == null || Certificate == null) {
+            if (CompanyName == null || CompanyMail == null || CompanyAddress == null || value == null) {
                 throw "Please fill all required details"
             }
+            else if (validateEmail(CompanyMail) == null) {
+                throw 'Please enter a valid domain address';
+            }
+
             else {
                 setloading(true)
+                const reference = await storage()
+                    .ref(`/${fileResponse.fileName}`)
+                    .putFile(`${fileResponse.uri}`);
+                console.log(reference, 'REDD');
+                const url = await storage()
+                    .ref(`/${fileResponse.fileName}`)
+                    .getDownloadURL();
+                console.log(url, 'im jb');
+                UpdateData(url)
+            }
+        } catch (error) {
+            alert(error)
+            console.log(error);
+        }
+    }
+    const UpdateData = async (url) => {
+        console.log(value);
+        try {
+            if (CompanyName == null || CompanyMail == null || CompanyAddress == null) {
+                throw "Please fill all required details"
+            }
+            else if (validateEmail(CompanyMail) == null) {
+                throw 'Please enter a valid domain address';
+            }
+            else {
                 const Update = await firestore()
                     .collection('Seeker')
                     .doc(data)
                     .update({
                         CompanyName: CompanyName,
                         CompanyMail: CompanyMail,
-                        Certificate: Certificate,
+                        Certificate: url,
                         CompanyAddress: CompanyAddress,
-                        city: city,
+                        city: value,
+                        isProfileComplete: 1
                     })
                     .then(async (res) => {
                         console.log(res, "RESPPPPPPPP");
+
                         refreshAuth(data)
                     }).catch((err) => {
                         console.log(err);
@@ -187,9 +214,9 @@ const CreateProfileRecruter = ({ route }) => {
                         justifyContent: 'space-between',
                         alignItems: 'center',
                     }}
-                    onPress={handleDocumentSelection}>
+                    onPress={UplaodFile}>
                     <Typoghraphy color={Color.Black}>
-                        {fileResponse.length == 0 ? 'Company Registration Certificate' : fileResponse}
+                        Company Registration Certificate
                     </Typoghraphy>
                     <Image
                         source={{
@@ -198,6 +225,12 @@ const CreateProfileRecruter = ({ route }) => {
                         style={{ width: 25, height: 25 }}
                     />
                 </TouchableOpacity>
+                {
+                    fileResponse == null ? null :
+                        <View>
+                            <Image source={{ uri: fileResponse?.uri }} style={{ marginVertical: 10, width: 150, height: 150, alignSelf: "center", borderRadius: 8 }} />
+                        </View>
+                }
 
                 <Typoghraphy
                     style={{ marginHorizontal: 5 }}
@@ -210,7 +243,8 @@ const CreateProfileRecruter = ({ route }) => {
                 <Button
                     loading={loading}
                     onPress={() => {
-                        UpdateData()
+                        UploadFile_Image()
+                        // UplaodFile()
                     }}
                     BtnStyle={[
                         styles.BtnStyle,

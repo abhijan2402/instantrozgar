@@ -19,6 +19,7 @@ import firestore from '@react-native-firebase/firestore';
 
 import Button from '../../Components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {validateEmail} from '../../utils/Validators';
 
 const SignUp = ({navigation}) => {
   const [email, setemail] = useState('');
@@ -31,9 +32,12 @@ const SignUp = ({navigation}) => {
       const Type = await AsyncStorage.getItem('Type');
       if (email === '' || password === '' || Cpassword === '') {
         throw 'Please fill email and password';
-      }
-      if (password != Cpassword) {
+      } else if (password != Cpassword) {
         throw 'Both Password must be same';
+      } else if (validateEmail(email) == null) {
+        throw 'Please enter a valid email address';
+      } else if (password.length < 6) {
+        throw 'Password must be greater than 6 digits';
       } else {
         setLoading(true);
         try {
@@ -67,12 +71,13 @@ const SignUp = ({navigation}) => {
             });
         } catch (error) {
           console.log(error, 'ERROR');
-
           if (error.code === 'auth/weak-password') {
             setLoading(false);
           } else if (error.code === 'auth/email-already-in-use') {
+            alert('email address already in use');
             setLoading(false);
           } else {
+            alert(error);
           }
           setLoading(false);
         }

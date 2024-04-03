@@ -53,29 +53,36 @@ const ProfileCompany = () => {
           </Typoghraphy>
         </View> */}
         <View style={[styles.InfoBox]}>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="700">
+          <Typoghraphy
+            size={20}
+            color={Color.Black}
+            fontWeight="500"
+            style={styles.TxtSty}>
             Organization name : {userDetails?.CompanyName}
           </Typoghraphy>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="700">
+          <Typoghraphy
+            size={20}
+            color={Color.Black}
+            fontWeight="500"
+            style={styles.TxtSty}>
             Email : {userDetails?.CompanyMail}
           </Typoghraphy>
-        </View>
-        <View style={styles.InfoBox}>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="600">
-            State : {userDetails?.city}
-          </Typoghraphy>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="600">
+          <Typoghraphy
+            size={20}
+            color={Color.Black}
+            fontWeight="500"
+            style={styles.TxtSty}>
             City : {userDetails?.city}
           </Typoghraphy>
-        </View>
-        <View style={styles.InfoBox}>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="600">
+          <Typoghraphy
+            size={20}
+            color={Color.Black}
+            fontWeight="500"
+            style={styles.TxtSty}>
             Company Overview :
           </Typoghraphy>
-          <Typoghraphy size={15} color={Color.Black} fontWeight="600">
-            lorem cbdc ifcn icenc idcnc
-          </Typoghraphy>
         </View>
+
         <Button
           onPress={() => {
             setUser(false);
@@ -129,5 +136,8 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     color: Color.White,
+  },
+  TxtSty: {
+    marginVertical: 5,
   },
 });

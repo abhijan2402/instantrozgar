@@ -63,7 +63,7 @@ const JobDetailBox = ({
         />
         <Typoghraphy style={styles.TextDesc}>{MinExp}</Typoghraphy>
       </View>
-      <View style={styles.JobDesc}>
+      {/* <View style={styles.JobDesc}>
         <Image
           source={{
             uri: 'https://cdn-icons-png.flaticon.com/128/942/942799.png',
@@ -73,7 +73,7 @@ const JobDetailBox = ({
         <Typoghraphy style={styles.TextDesc}>
           {NoOfApplicant} Applicant
         </Typoghraphy>
-      </View>
+      </View> */}
       <View style={{marginLeft: 5, marginTop: 5}}>
         {/* <Typoghraphy style={{fontWeight: '800'}}>Job Description</Typoghraphy> */}
         <Typoghraphy style={styles.TextDesc}>{DESC}</Typoghraphy>
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginHorizontal: 10,
     backgroundColor: Color.ThemeBlue,
+    marginTop: 15,
   },
   BtnTXt: {
     color: Color.White,

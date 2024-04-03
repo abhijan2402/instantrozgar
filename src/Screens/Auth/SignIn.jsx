@@ -18,6 +18,7 @@ import Button from '../../Components/Button';
 import {GlobalVariable} from '../../../App';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import {validateEmail} from '../../utils/Validators';
 
 const SignIn = ({navigation}) => {
   const {setUser, refreshAuth} = useContext(GlobalVariable);
@@ -26,11 +27,13 @@ const SignIn = ({navigation}) => {
   const [Cpassword, setCpassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(true);
+
   const validateUser = async () => {
-    console.log('TEST');
     try {
       if (email === '' || password === '') {
         throw 'Please fill email and password';
+      } else if (validateEmail(email) == null) {
+        throw 'Please enter a valid email address';
       } else {
         setLoading(true);
         try {
@@ -58,6 +61,7 @@ const SignIn = ({navigation}) => {
       }
     } catch (error) {
       console.log(error, 'ERROR');
+      alert(error);
     } finally {
       setLoading(false);
     }
@@ -99,7 +103,7 @@ const SignIn = ({navigation}) => {
           />
           <TextInput
             placeholder="Email"
-            placeholderTextColor={Color.Black}
+            placeholderTextColor={Color.Grey}
             style={{
               height: 38,
               alignItems: 'center',
@@ -120,7 +124,7 @@ const SignIn = ({navigation}) => {
           />
           <TextInput
             placeholder="Password"
-            placeholderTextColor={Color.Black}
+            placeholderTextColor={Color.Grey}
             style={{
               height: 38,
               alignItems: 'center',
