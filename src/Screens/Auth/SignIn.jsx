@@ -19,9 +19,10 @@ import {GlobalVariable} from '../../../App';
 import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import {validateEmail} from '../../utils/Validators';
+import { loginUser, logout, updateUser } from '../../Network/auth/auth';
 
 const SignIn = ({navigation}) => {
-  const {setUser, refreshAuth} = useContext(GlobalVariable);
+  const {refreshAuth} = useContext(GlobalVariable);
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
   const [Cpassword, setCpassword] = useState('');
@@ -36,35 +37,52 @@ const SignIn = ({navigation}) => {
         throw 'Please enter a valid email address';
       } else {
         setLoading(true);
-        try {
-          await auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(async userCredential => {
-              console.log(userCredential.user, 'USER HERE');
-              refreshAuth();
-              const user = userCredential.user;
-            });
-        } catch (error) {
-          console.log(error, 'ERROR');
-
-          if (error.code === 'auth/weak-password') {
-            alert(error);
-            setLoading(false);
-          } else if (error.code === 'auth/email-already-in-use') {
-            setLoading(false);
-          } else {
-            alert(error);
-            console.log(error);
-          }
-          setLoading(false);
-        }
+        loginUser(email, password)
+          .then(async(respone) => {
+            if (respone.data.user.emailVerified) {
+              console.log(respone?.data?.user?.uid);
+              await updateUser(respone?.data?.user?.uid,{isVerified:true})
+              refreshAuth()
+            } else {
+              await logout()
+              alert("Verify your Email Please");
+            }
+            setLoading(false)
+          })
+          .catch((error) => {
+            setLoading(false)
+            console.debug(error);
+          })
       }
-    } catch (error) {
-      console.log(error, 'ERROR');
-      alert(error);
-    } finally {
-      setLoading(false);
-    }
+        // try {
+        //   await auth()
+        //     .signInWithEmailAndPassword(email, password)
+        //     .then(async userCredential => {
+        //       console.log(userCredential.user, 'USER HERE');
+        //       refreshAuth();
+        //       const user = userCredential.user;
+        //     });
+        // } catch (error) {
+        //   console.log(error, 'ERROR');
+
+        //   if (error.code === 'auth/weak-password') {
+        //     alert(error);
+        //     setLoading(false);
+        //   } else if (error.code === 'auth/email-already-in-use') {
+        //     setLoading(false);
+        //   } else {
+        //     alert(error);
+        //     console.log(error);
+        //   }
+        //   setLoading(false);
+        // }
+      // }
+      } catch (error) {
+        console.log(error, 'ERROR');
+        alert(error);
+      } finally {
+        setLoading(false);
+      }
   };
   return (
     <ScrollView style={styles.MainContainer}>
@@ -95,12 +113,12 @@ const SignIn = ({navigation}) => {
           SignIn
         </Typoghraphy>
         <View style={styles.Input}>
-          <Image
+          {/* <Image
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/11068/11068364.png',
             }}
             style={{width: 28, height: 28}}
-          />
+          /> */}
           <TextInput
             placeholder="Email"
             placeholderTextColor={Color.Grey}
@@ -116,12 +134,12 @@ const SignIn = ({navigation}) => {
           />
         </View>
         <View style={styles.Input}>
-          <Image
+          {/* <Image
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/10464/10464776.png',
             }}
             style={{width: 28, height: 28}}
-          />
+          /> */}
           <TextInput
             placeholder="Password"
             placeholderTextColor={Color.Grey}

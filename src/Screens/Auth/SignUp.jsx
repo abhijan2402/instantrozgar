@@ -9,7 +9,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
 import LottieView from 'lottie-react-native';
@@ -20,8 +20,12 @@ import firestore from '@react-native-firebase/firestore';
 import Button from '../../Components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {validateEmail} from '../../utils/Validators';
+import { GlobalVariable } from '../../../App';
+import { createNewUser, registerNewUser } from '../../Network/auth/auth';
 
 const SignUp = ({navigation}) => {
+  const {userType}=useContext(GlobalVariable);
+  console.log(userType,'type');
   const [email, setemail] = useState('');
   const [password, setpassword] = useState('');
   const [Cpassword, setCpassword] = useState('');
@@ -41,34 +45,49 @@ const SignUp = ({navigation}) => {
       } else {
         setLoading(true);
         try {
-          await auth()
-            .createUserWithEmailAndPassword(email, password)
-            .then(async userCredential => {
-              console.log(userCredential.user, 'USER_CREATED');
-              const user = userCredential.user;
-              return firestore()
-                .collection('Seeker')
-                .doc(user.uid)
-                .set({
-                  email: email,
-                  isVerified: false,
-                  type: Type,
-                  isProfileComplete: 0,
-                })
-                .then(async () => {
-                  if (Type == 'Seeking') {
-                    navigation.replace('CreateProfile', {userID: user.uid});
-                  } else {
-                    navigation.replace('CreateProfileRecruter', {
-                      userID: user.uid,
-                    });
-                  }
-                })
-                .catch(error => {
-                  console.log(error);
-                })
-                .finally(() => setLoading(false));
-            });
+          createNewUser(email, password)
+          .then((respone) => {
+              registerNewUser(respone.data.user.uid,{email: email,isVerified: false,type: userType,isProfileComplete: 0,})
+              .then(async()=>{
+                  await AsyncStorage.removeItem("Type")
+                  alert("Email Verification Send, Check Your Spam Too...")
+                  setLoading(false)
+                  navigation.goBack();
+              })
+              .catch((e)=>{
+                console.log(e)
+                setLoading(false)
+              })
+          })
+          .catch((error) => {
+              console.log(error);
+              setLoading(false)
+          })
+          // await auth()
+          //   .createUserWithEmailAndPassword(email, password)
+          //   .then(async userCredential => {
+          //     console.log(userCredential.user, 'USER_CREATED');
+          //     const user = userCredential.user;
+              // return firestore().collection('Seeker').doc(user.uid).set({
+              //     email: email,
+              //     isVerified: false,
+              //     type: userType,
+              //     isProfileComplete: 0,
+              //   })
+          //       .then(async () => {
+          //         if (Type == 'Seeking') {
+          //           navigation.replace('CreateProfile', {userID: user.uid});
+          //         } else {
+          //           navigation.replace('CreateProfileRecruter', {
+          //             userID: user.uid,
+          //           });
+          //         }
+          //       })
+          //       .catch(error => {
+          //         console.log(error);
+          //       })
+          //       .finally(() => setLoading(false));
+          //   });
         } catch (error) {
           console.log(error, 'ERROR');
           if (error.code === 'auth/weak-password') {
@@ -118,12 +137,12 @@ const SignUp = ({navigation}) => {
           SignUp
         </Typoghraphy>
         <View style={styles.Input}>
-          <Image
+          {/* <Image
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/11068/11068364.png',
             }}
             style={{width: 28, height: 28}}
-          />
+          /> */}
           <TextInput
             placeholder="Email"
             placeholderTextColor={Color.Black}
@@ -139,12 +158,12 @@ const SignUp = ({navigation}) => {
           />
         </View>
         <View style={styles.Input}>
-          <Image
+          {/* <Image
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/10464/10464776.png',
             }}
             style={{width: 28, height: 28}}
-          />
+          /> */}
           <TextInput
             placeholder="Password"
             placeholderTextColor={Color.Black}
@@ -160,12 +179,12 @@ const SignUp = ({navigation}) => {
           />
         </View>
         <View style={styles.Input}>
-          <Image
+          {/* <Image
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/10464/10464776.png',
             }}
             style={{width: 28, height: 28}}
-          />
+          /> */}
           <TextInput
             placeholder="Confirm Password"
             placeholderTextColor={Color.Black}

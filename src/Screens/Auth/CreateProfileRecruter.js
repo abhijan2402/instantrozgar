@@ -24,8 +24,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { validateEmail } from '../../utils/Validators';
 
 const CreateProfileRecruter = ({ route }) => {
-    const { userDetails, refreshAuth } = useContext(GlobalVariable)
-    const data = route?.params?.userID
+    const {userDetails, refreshAuth} = useContext(GlobalVariable);
     // console.log(userDetails, data, "USER___DETAILS");
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
@@ -115,7 +114,7 @@ const CreateProfileRecruter = ({ route }) => {
             else {
                 const Update = await firestore()
                     .collection('Seeker')
-                    .doc(data)
+                    .doc(userDetails?.id)
                     .update({
                         CompanyName: CompanyName,
                         CompanyMail: CompanyMail,

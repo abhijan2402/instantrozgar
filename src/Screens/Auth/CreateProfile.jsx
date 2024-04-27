@@ -21,12 +21,13 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-import DocumentPicker from 'react-native-document-picker';
+import auth from '@react-native-firebase/auth';
 import {graduationTest, phonenumber} from '../../utils/Validators';
-const CreateProfile = ({navigation, route}) => {
-  const {setUser, refreshAuth} = useContext(GlobalVariable);
-  const data = route?.params?.userID;
+import { FIREBASE_COLLECTION } from '../../Constants/collections';
 
+const CreateProfile = ({navigation, route}) => {
+  const {userDetails, refreshAuth} = useContext(GlobalVariable);
+// console.log(userDetails?.id,'bjuibuj');
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -131,8 +132,8 @@ const CreateProfile = ({navigation, route}) => {
   const UpdateData = async (url, demoArr) => {
     console.log(demoArr, 'oooo');
     const Update = await firestore()
-      .collection('Seeker')
-      .doc(data)
+      .collection(FIREBASE_COLLECTION.SEEKER)
+      .doc(userDetails?.id)
       .update({
         Name: Name,
         HighestQualification: HighestQualification,
@@ -147,12 +148,12 @@ const CreateProfile = ({navigation, route}) => {
       })
       .then(res => {
         console.log(res, 'RESPPPPPPPP');
-        refreshAuth(data);
+        refreshAuth();
         setloading(false);
       })
       .catch(err => {
         setloading(false);
-        console.log(err);
+        console.log(err,'omipkn');
       });
   };
   const UpdateVal = value => {

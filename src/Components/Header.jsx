@@ -11,9 +11,12 @@ const Header = ({title, leftIcon = false, onPress}) => {
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'space-between',
-        alignSelf: leftIcon ? null : 'center',
-        marginVertical: 10,
+        alignSelf: 'center',
+        // marginVertical: 10,
+        backgroundColor:Color.LightBlue,
+        width:"100%",
+        paddingVertical:14,
+        paddingHorizontal:20
       }}>
       {leftIcon ? (
         <TouchableOpacity onPress={onPress}>
@@ -21,19 +24,20 @@ const Header = ({title, leftIcon = false, onPress}) => {
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/130/130882.png',
             }}
-            style={{width: 20, height: 20, marginHorizontal: 20}}
+            style={{width: 16, height: 16, marginHorizontal: 0,tintColor:Color.white}}
           />
         </TouchableOpacity>
       ) : null}
       <Typoghraphy
-        size={25}
+        size={20}
         fontWeight={'600'}
-        color={Color.Purple}
+        color={Color.white}
         style={{
           //   borderWidth: 1,
-          width: windowWidth / 1.4,
+          // width: windowWidth / 1.4,
           alignItems: 'center',
           textAlign: 'center',
+          paddingLeft:leftIcon?10:4
         }}>
         {title}
       </Typoghraphy>

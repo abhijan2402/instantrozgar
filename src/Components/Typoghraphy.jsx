@@ -5,7 +5,7 @@ const Typoghraphy = ({
   children,
   size = 14,
   color = 'black',
-  fontWeight = '400',
+  fontWeight = '600',
   style,
 }) => {
   return (

@@ -72,7 +72,7 @@ const JobDescription = ({route, navigation}) => {
     }
   };
   return (
-    <View style={{backgroundColor: Color.White, height: windowHeight}}>
+    <View style={{backgroundColor: Color.White, flex:1,alignItems:"center"}}>
       <Header
         title={'Job Details'}
         leftIcon={true}
@@ -82,85 +82,90 @@ const JobDescription = ({route, navigation}) => {
       />
       <ScrollView
         showsVerticalScrollIndicator={false}
-        style={styles.DetailsContainer}>
-        <Typoghraphy size={25} color={Color.Purple} fontWeight="600">
+        style={styles.DetailsContainer}
+      >
+        <Typoghraphy size={25} color={Color.LightBlue} style={{marginTop:10}} fontWeight="600">
           {Data?.JobRole}
         </Typoghraphy>
-        <Typoghraphy size={13} color={Color.Black} fontWeight="400">
-          {Data?.CompanyName}
-        </Typoghraphy>
-        <View style={styles.JobLoc}>
-          <Image
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/128/535/535239.png',
-            }}
-            style={{width: 15, height: 15}}
-          />
-          <Typoghraphy size={13} color={Color.Black} fontWeight="400">
-            {Data?.CompanyAddress}
+        <View style={styles.detailsBox} >
+          <Typoghraphy size={13} color={Color.Black} fontWeight="500">
+            {Data?.CompanyName}
           </Typoghraphy>
+          <View style={styles.JobLoc}>
+            <Image
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/128/535/535239.png',
+              }}
+              style={{width: 15, height: 15}}
+            />
+            <Typoghraphy size={13} color={Color.Black} style={{marginLeft:6}} fontWeight="500">
+              {Data?.CompanyAddress}
+            </Typoghraphy>
+          </View>
         </View>
         <Typoghraphy
           size={20}
-          color={Color.Black}
-          fontWeight="600"
-          style={{marginTop: 15}}>
+          color={Color.LightBlue}
+          style={{marginTop:10}}
+          fontWeight="600">
           Job Details
         </Typoghraphy>
 
-        <View style={styles.JobDesc}>
-          <Image
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/128/2910/2910791.png',
-            }}
-            style={{width: 15, height: 15}}
-          />
-          <Typoghraphy style={styles.TextDesc}> {Data?.JobRole}</Typoghraphy>
+        <View style={styles.detailsBox}>
+          <View style={styles.JobDesc}>
+            <Image
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/128/2910/2910791.png',
+              }}
+              style={{width: 15, height: 15}}
+            />
+            <Typoghraphy style={[styles.TextDesc,{marginLeft:6}]}> {Data?.JobRole}</Typoghraphy>
+          </View>
+          <View style={styles.JobDesc}>
+            <Image
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/128/3076/3076635.png',
+              }}
+              style={{width: 15, height: 15}}
+            />
+            <Typoghraphy style={[styles.TextDesc,{marginTop:6,marginLeft:6}]}>{`₹ ${Data?.Salart}`}</Typoghraphy>
+          </View>
+          <View style={styles.JobDesc}>
+            <Image
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/128/855/855860.png',
+              }}
+              style={{width: 15, height: 15}}
+            />
+            <Typoghraphy style={[styles.TextDesc,{marginTop:6,marginLeft:6}]}>{Data?.JobMode}</Typoghraphy>
+          </View>
+          <View style={styles.JobDesc}>
+            <Image
+              source={{
+                uri: 'https://cdn-icons-png.flaticon.com/128/1322/1322236.png',
+              }}
+              style={{width: 15, height: 15}}
+            />
+            <Typoghraphy style={[styles.TextDesc,{marginTop:6,marginLeft:6}]}>
+              {Data?.MinExp} {Data?.MinExp==1?"Year":"Years"}
+            </Typoghraphy>
+          </View>
         </View>
-        <View style={styles.JobDesc}>
-          <Image
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/128/3076/3076635.png',
-            }}
-            style={{width: 15, height: 15}}
-          />
-          <Typoghraphy style={styles.TextDesc}>{Data?.Salart}</Typoghraphy>
+        <View style={{ marginTop: 10}}>
+          <Typoghraphy style={[styles.TextDesc,{fontSize:14,color:Color.Grey}]} fontWeight='400' >{Data?.JobDesc}</Typoghraphy>
         </View>
-        <View style={styles.JobDesc}>
-          <Image
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/128/855/855860.png',
-            }}
-            style={{width: 15, height: 15}}
-          />
-          <Typoghraphy style={styles.TextDesc}>{Data?.JobMode}</Typoghraphy>
-        </View>
-        <View style={styles.JobDesc}>
-          <Image
-            source={{
-              uri: 'https://cdn-icons-png.flaticon.com/128/1322/1322236.png',
-            }}
-            style={{width: 15, height: 15}}
-          />
-          <Typoghraphy style={styles.TextDesc}>
-            {Data?.MinExp} years
-          </Typoghraphy>
-        </View>
-        <View style={{marginLeft: 5, marginTop: 5}}>
-          <Typoghraphy style={styles.TextDesc}>{Data?.JobDesc}</Typoghraphy>
-        </View>
-        <Button
-          BtnStyle={[
-            styles.BtnStyle,
-            {borderWidth: 2, borderColor: Color.ThemeBlue, marginTop: 20},
-          ]}
-          disabled={disble}
-          loading={loading}
-          onPress={ApplyJob}
-          BtnTxtStyle={[styles.BtnTxtStyle]}
-          title={BtnText}
-        />
       </ScrollView>
+      <Button
+        BtnStyle={[
+          styles.BtnStyle,
+          {borderWidth: 2, borderColor: Color.ThemeBlue, marginTop: 20},
+        ]}
+        disabled={disble}
+        loading={loading}
+        onPress={ApplyJob}
+        BtnTxtStyle={[styles.BtnTxtStyle]}
+        title={BtnText}
+      />
     </View>
   );
 };
@@ -169,41 +174,43 @@ export default JobDescription;
 
 const styles = StyleSheet.create({
   DetailsContainer: {
-    marginHorizontal: 20,
-    marginBottom: 70,
+    width:'90%',
     // height: windowHeight / 1,
   },
   JobLoc: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginVertical: 2,
+    marginTop:6
+    // marginVertical: 2,
   },
   JobDesc: {
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 10,
-    marginVertical: 2,
   },
   TextDesc: {
     fontSize: 13,
     color: Color.Black,
-    fontWeight: '400',
-    marginLeft: 7,
+    fontWeight: '500',
   },
   BtnStyle: {
-    paddingVertical: 5,
-    paddingHorizontal: 20,
     borderRadius: 8,
-    width: windowWidth / 1.2,
-    marginVertical: 5,
-    alignSelf: 'center',
-    backgroundColor: Color.ThemeBlue,
+    backgroundColor: Color.LightBlue,
+    width:'90%',
+    height:45,
+    justifyContent:"center",
+    marginBottom:20
   },
   BtnTxtStyle: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '700',
     color: Color.White,
   },
+  detailsBox:{
+    backgroundColor:Color.Light_grey,
+    padding:10,
+    borderRadius:8,
+    marginTop:8
+  }
 });

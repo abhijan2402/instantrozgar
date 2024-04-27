@@ -48,8 +48,8 @@ const BottomTab = () => {
           {
             elevation: 0,
             backgroundColor: '#ffffff',
-            borderTopWidth: 1,
-            borderTopColor: '#808080',
+            // borderTopWidth: 1,
+            // borderTopColor: '#808080',
             height: 60,
           },
         ],
