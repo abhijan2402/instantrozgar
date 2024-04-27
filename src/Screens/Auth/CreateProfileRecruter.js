@@ -18,7 +18,6 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DatePicker from 'react-native-date-picker';
 import { GlobalVariable } from '../../../App';
 import firestore from '@react-native-firebase/firestore';
-import DocumentPicker from 'react-native-document-picker';
 import storage from '@react-native-firebase/storage';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { validateEmail } from '../../utils/Validators';

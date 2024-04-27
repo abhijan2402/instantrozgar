@@ -6,6 +6,7 @@ import {
   View,
 } from 'react-native';
 import React from 'react';
+import { Color } from '../Constants/Color';
 
 const Button = ({
   title,
@@ -14,6 +15,7 @@ const Button = ({
   onPress,
   loading,
   disabled = false,
+  loaderColor=Color.white
 }) => {
   return (
     <TouchableOpacity
@@ -21,7 +23,7 @@ const Button = ({
       onPress={onPress}
       style={[{alignItems: 'center'}, BtnStyle]}>
       {loading ? (
-        <ActivityIndicator color={'white'} size={25} />
+        <ActivityIndicator color={loaderColor} size={25} />
       ) : (
         <Text style={BtnTxtStyle}>{title}</Text>
       )}

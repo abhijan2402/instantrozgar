@@ -1,16 +1,7 @@
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import {ScrollView,StyleSheet,Text,View,TextInput,TouchableOpacity,Image, Dimensions} from 'react-native';
 import React, {useContext, useState} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
-import LottieView from 'lottie-react-native';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 import Header from '../../Components/Header';
@@ -19,11 +10,12 @@ import DatePicker from 'react-native-date-picker';
 import {GlobalVariable} from '../../../App';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-
-import auth from '@react-native-firebase/auth';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {graduationTest, phonenumber} from '../../utils/Validators';
 import { FIREBASE_COLLECTION } from '../../Constants/collections';
+import DocumentPicker from 'react-native-document-picker'
+
+const {width} = Dimensions.get("screen");
 
 const CreateProfile = ({navigation, route}) => {
   const {userDetails, refreshAuth} = useContext(GlobalVariable);
@@ -73,25 +65,25 @@ const CreateProfile = ({navigation, route}) => {
     {name: 'Content Writing', isSelcted: false},
   ]);
   const UplaodFile = async () => {
-    console.log(fileResponse, 'FILERESPONDRE');
-    const options = {
-      media: 'photo',
-    };
-    const result = await launchImageLibrary(options);
-    console.log(result.assets[0].uri, 'RESULT');
-    setFileResponse(result?.assets[0]);
+    const response = await DocumentPicker.pick({
+      presentationStyle: 'fullScreen',
+      type: [DocumentPicker.types.pdf],
+      copyTo: 'documentDirectory',
+    });
+    console.log(response[0]);
+    setFileResponse(response[0]);
   };
   const handleDocumentSelection = async () => {
     let check = false;
     let demoArr = [];
     let testArr = SkillsArr.filter(i => i?.isSelcted != true);
-    console.log(testArr, testArr.length);
+    // console.log(testArr, testArr.length);
     if (testArr.length == SkillsArr.length) {
       check = true;
     } else {
       check = false;
       demoArr = SkillsArr.filter(i => i?.isSelcted != false);
-      console.log(demoArr, 'DEMOARR');
+      // console.log(demoArr, 'DEMOARR');
     }
     try {
       if (
@@ -112,14 +104,11 @@ const CreateProfile = ({navigation, route}) => {
         throw 'Please select skills';
       } else {
         setloading(true);
-        const reference = await storage()
-          .ref(`/${fileResponse.fileName}`)
-          .putFile(`${fileResponse.uri}`);
-        console.log(reference, 'REDD');
-        const url = await storage()
-          .ref(`/${fileResponse.fileName}`)
-          .getDownloadURL();
-        console.log(url, 'im jb');
+        // const reference = await storage().ref(`/${fileResponse.name}`).putFile(`${fileResponse?.uri}`);
+        const reference = storage().ref(`pdfs/${fileResponse.name}`);
+        await reference.putFile(fileResponse.fileCopyUri);
+        const url = await storage().ref(`pdfs/${fileResponse.name}`).getDownloadURL();
+        // console.log(url,'nknokjl');
         UpdateData(url, demoArr);
       }
     } catch (error) {
@@ -130,7 +119,6 @@ const CreateProfile = ({navigation, route}) => {
   };
 
   const UpdateData = async (url, demoArr) => {
-    console.log(demoArr, 'oooo');
     const Update = await firestore()
       .collection(FIREBASE_COLLECTION.SEEKER)
       .doc(userDetails?.id)
@@ -354,7 +342,7 @@ const CreateProfile = ({navigation, route}) => {
             alignItems: 'center',
           }}
           onPress={UplaodFile}>
-          <Typoghraphy color={Color.Black}>{'Resume'}</Typoghraphy>
+          <Typoghraphy color={Color.Black}>{fileResponse == null?'Resume':fileResponse?.name}</Typoghraphy>
           <Image
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/1665/1665680.png',
@@ -362,7 +350,7 @@ const CreateProfile = ({navigation, route}) => {
             style={{width: 25, height: 25}}
           />
         </TouchableOpacity>
-        {fileResponse == null ? (
+        {/* {fileResponse == null ? (
           ''
         ) : (
           <Image
@@ -374,7 +362,7 @@ const CreateProfile = ({navigation, route}) => {
               marginVertical: 10,
             }}
           />
-        )}
+        )} */}
         <Button
           onPress={() => {
             handleDocumentSelection();
@@ -396,7 +384,7 @@ export default CreateProfile;
 
 const styles = StyleSheet.create({
   MainContainer: {
-    height: windowHeight,
+    height: '100%',
     backgroundColor: Color.White,
   },
   Input: {
@@ -418,7 +406,7 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 20,
     borderRadius: 8,
-    width: windowWidth / 1.17,
+    width: width / 1.17,
     marginVertical: 20,
     alignSelf: 'center',
     backgroundColor: Color.ThemeBlue,

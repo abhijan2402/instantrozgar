@@ -8,10 +8,11 @@ import Button from '../../Components/Button';
 import {GlobalVariable} from '../../../App';
 import auth from '@react-native-firebase/auth';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { logout } from '../../Network/auth/auth';
+import DownloadMedia from '../../Components/common/DownloadMedia';
 
 const Profile = () => {
-  const {setUser, userDetails} = useContext(GlobalVariable);
-
+  const {setUser, userDetails,setUserType} = useContext(GlobalVariable);
   return (
     <ScrollView style={styles.MainContainer}>
       <Header title={'Profile'} />
@@ -43,14 +44,14 @@ const Profile = () => {
         </View>
 
         {/* experience details */}
-        <Typoghraphy
+        {/* <Typoghraphy
           style={[styles.TextInfo,{marginTop:10,width:"90%",alignSelf:"center"}]}
           size={16}
           color={Color.Grey}
           fontWeight="700">
           Experience
-        </Typoghraphy>
-        <View style={[styles.InfoBox, {alignSelf:"center"}]}>
+        </Typoghraphy> */}
+        {/* <View style={[styles.InfoBox, {alignSelf:"center"}]}>
           <Typoghraphy
             style={[styles.TextInfo,{marginBottom:0}]}
             size={18}
@@ -123,7 +124,7 @@ const Profile = () => {
               Full time
             </Typoghraphy>
           </View>
-        </View>
+        </View> */}
 
         {/* education details */}
         <Typoghraphy
@@ -139,16 +140,16 @@ const Profile = () => {
             size={18}
             color={Color.LightBlue}
             fontWeight="700">
-            B.E/B.Tech, Computer Science
+            {userDetails?.HighestQualification}
           </Typoghraphy>
           <Typoghraphy
             style={[styles.TextInfo,{marginBottom:6}]}
             size={12}
             color={Color.Grey}
             fontWeight="700">
-            Jaipur National University
+            Year of completion - {userDetails?.YearGraduation}
           </Typoghraphy>
-          <View style={{flexDirection: 'row',}}>
+          {/* <View style={{flexDirection: 'row',}}>
             <Typoghraphy
               style={[styles.smallBox,{}]}
               size={12}
@@ -163,52 +164,88 @@ const Profile = () => {
               fontWeight="700">
               Full time
             </Typoghraphy>
-          </View>
+          </View> */}
         </View>
 
-        {/* skills details */}
         <View style={[styles.InfoBox, {alignSelf:"center"}]}>
-          <Typoghraphy
-            style={[styles.TextInfo,{marginBottom:6}]}
-            size={18}
-            color={Color.LightBlue}
-            fontWeight="700">
-            Skills
-          </Typoghraphy>
-          {/* <Typoghraphy
-            style={[styles.TextInfo,{marginBottom:6}]}
-            size={12}
-            color={Color.Grey}
-            fontWeight="700">
-            Jaipur National University
-          </Typoghraphy> */}
-          <View style={{flexDirection: 'row',}}>
             <Typoghraphy
-              style={[styles.smallBox,{}]}
-              size={12}
-              color={Color.Grey}
+              style={[styles.TextInfo,{marginBottom:6}]}
+              size={18}
+              color={Color.LightBlue}
               fontWeight="700">
-              React Native
+              Personal Info
             </Typoghraphy>
+            <View style={{flexDirection: 'row',}}>
             <Typoghraphy
-              style={[styles.smallBox,{marginLeft:8}]}
-              size={12}
-              color={Color.Grey}
-              fontWeight="700">
-              React
-            </Typoghraphy>
+                style={[styles.smallBox,{}]}
+                size={12}
+                color={Color.Grey}
+                fontWeight="700">
+                  {userDetails?.Gender}
+              </Typoghraphy>
             <Typoghraphy
-              style={[styles.smallBox,{marginLeft:8}]}
-              size={12}
-              color={Color.Grey}
-              fontWeight="700">
-              Node js
-            </Typoghraphy>
+                style={[styles.smallBox,{}]}
+                size={12}
+                color={Color.Grey}
+                fontWeight="700">
+                  {userDetails?.Cities}
+              </Typoghraphy>
+            </View>
           </View>
-        </View>
+        {/* skills details */}
+        {
+          userDetails?.skills?.length != 0 &&
+          <View style={[styles.InfoBox, {alignSelf:"center"}]}>
+            <Typoghraphy
+              style={[styles.TextInfo,{marginBottom:6}]}
+              size={18}
+              color={Color.LightBlue}
+              fontWeight="700">
+              Skills
+            </Typoghraphy>
+            <View style={{flexDirection: 'row',}}>
+              {
+                userDetails?.skills?.map((skill)=>(
+                  <Typoghraphy
+                    style={[styles.smallBox,{}]}
+                    size={12}
+                    color={Color.Grey}
+                    fontWeight="700">
+                    {skill?.name}
+                  </Typoghraphy>
+                ))
+              }
+            </View>
+            {/* <View style={{flexDirection: 'row',}}>
+              <Typoghraphy
+                style={[styles.smallBox,{}]}
+                size={12}
+                color={Color.Grey}
+                fontWeight="700">
+                React Native
+              </Typoghraphy>
+              <Typoghraphy
+                style={[styles.smallBox,{marginLeft:8}]}
+                size={12}
+                color={Color.Grey}
+                fontWeight="700">
+                React
+              </Typoghraphy>
+              <Typoghraphy
+                style={[styles.smallBox,{marginLeft:8}]}
+                size={12}
+                color={Color.Grey}
+                fontWeight="700">
+                Node js
+              </Typoghraphy>
+            </View> */}
+          </View>
+        }
+        <DownloadMedia fileUrl={userDetails?.Resume} />
         <Button
-          onPress={() => {
-            auth().signOut();
+          onPress={async() => {
+            await logout();
+            setUserType("");
             setUser(false);
           }}
           BtnStyle={[
@@ -248,14 +285,15 @@ const styles = StyleSheet.create({
   BtnStyle: {
     paddingVertical: 5,
     paddingHorizontal: 20,
-    borderRadius: 8,
+    borderRadius: 6,
     width: '90%',
-    marginVertical: 20,
+    marginVertical: 2,
     alignSelf: 'center',
     backgroundColor: Color.ThemeBlue,
+    height:40
   },
   BtnTxtStyle: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: '700',
     color: Color.White,
   },
@@ -266,6 +304,7 @@ const styles = StyleSheet.create({
     backgroundColor:'#E4E4E4',
     paddingHorizontal:8,
     paddingVertical:4,
-    borderRadius:4
+    borderRadius:4,
+    marginLeft:4
   }
 });
