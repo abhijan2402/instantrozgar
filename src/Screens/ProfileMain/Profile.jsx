@@ -35,12 +35,12 @@ const Profile = () => {
               8080808008
             </Typoghraphy>
           </View>
-          <FontAwesome
+          {/* <FontAwesome
             style={{position: 'absolute',right:10,bottom:10}}
             name="share"
             color={Color.LightBlue}
             size={18}
-          />
+          /> */}
         </View>
 
         {/* experience details */}
@@ -181,14 +181,14 @@ const Profile = () => {
                 size={12}
                 color={Color.Grey}
                 fontWeight="700">
-                  {userDetails?.Gender}
+                  Gender: {userDetails?.Gender}
               </Typoghraphy>
             <Typoghraphy
                 style={[styles.smallBox,{}]}
                 size={12}
                 color={Color.Grey}
                 fontWeight="700">
-                  {userDetails?.Cities}
+                  City: {userDetails?.Cities}
               </Typoghraphy>
             </View>
           </View>
@@ -203,7 +203,7 @@ const Profile = () => {
               fontWeight="700">
               Skills
             </Typoghraphy>
-            <View style={{flexDirection: 'row',}}>
+            <ScrollView horizontal>
               {
                 userDetails?.skills?.map((skill)=>(
                   <Typoghraphy
@@ -215,7 +215,7 @@ const Profile = () => {
                   </Typoghraphy>
                 ))
               }
-            </View>
+            </ScrollView>
             {/* <View style={{flexDirection: 'row',}}>
               <Typoghraphy
                 style={[styles.smallBox,{}]}

@@ -14,6 +14,7 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import {graduationTest, phonenumber} from '../../utils/Validators';
 import { FIREBASE_COLLECTION } from '../../Constants/collections';
 import DocumentPicker from 'react-native-document-picker'
+import { generateYears } from '../../utils/helpers';
 
 const {width} = Dimensions.get("screen");
 
@@ -26,6 +27,11 @@ const CreateProfile = ({navigation, route}) => {
     {label: 'Male', value: 'Male'},
     {label: 'Female', value: 'Female'},
   ]);
+
+  const [years, setYears] = useState(generateYears());
+  const[openYear,setOpenYear]=useState(false);
+  const [YearGraduation, setYearGraduation] = useState('');
+
   const [open1, setOpen1] = useState(false);
   const [value1, setValue1] = useState(null);
   const [items1, setItems1] = useState([
@@ -50,7 +56,6 @@ const CreateProfile = ({navigation, route}) => {
   const [open2, setOpen2] = useState(false);
   const [Name, setName] = useState(null);
   const [HighestQualification, setHighestQualification] = useState(null);
-  const [YearGraduation, setYearGraduation] = useState(null);
   const [DOB, setDOB] = useState(null);
   const [skills, setskills] = useState(null);
   const [Resume, setResume] = useState(null);
@@ -67,7 +72,10 @@ const CreateProfile = ({navigation, route}) => {
   const UplaodFile = async () => {
     const response = await DocumentPicker.pick({
       presentationStyle: 'fullScreen',
-      type: [DocumentPicker.types.pdf],
+      type: [
+        DocumentPicker.types.pdf,
+        'application/msword', 
+      ],
       copyTo: 'documentDirectory',
     });
     console.log(response[0]);
@@ -89,7 +97,7 @@ const CreateProfile = ({navigation, route}) => {
       if (
         Name == null ||
         HighestQualification == null ||
-        YearGraduation == null ||
+        YearGraduation == '' ||
         SkillsArr == null ||
         value1 == null ||
         value == null ||
@@ -160,7 +168,7 @@ const CreateProfile = ({navigation, route}) => {
     setSkillsArr(Data);
   };
   return (
-    <ScrollView style={styles.MainContainer}>
+    <ScrollView nestedScrollEnabled={true} style={styles.MainContainer}>
       <Header title={'Create Profile'} leftIcon={true} />
       <DatePicker
         modal
@@ -203,15 +211,26 @@ const CreateProfile = ({navigation, route}) => {
             setHighestQualification(value);
           }}
         />
-        <TextInput
-          maxLength={4}
-          placeholder="Year of graduation"
-          placeholderTextColor={Color.Black}
-          style={styles.Input}
-          keyboardType="numeric"
-          onChangeText={value => {
-            setYearGraduation(value);
-          }}
+        {/* <TextInput
+        //   maxLength={4}
+        //   placeholder="Year of graduation"
+        //   placeholderTextColor={Color.Black}
+        //   style={styles.Input}
+        //   keyboardType="numeric"
+        //   onChangeText={value => {
+        //     setYearGraduation(value);
+        //   }}
+        // /> */}
+        <DropDownPicker
+          open={openYear}
+          value={YearGraduation}
+          items={years}
+          setOpen={setOpenYear}
+          setValue={setYearGraduation}
+          setItems={setYears}
+          placeholder={'Select Qualification Year'}
+          style={{marginVertical: 10}}
+          zIndex={20000}
         />
 
         <DropDownPicker
@@ -342,7 +361,13 @@ const CreateProfile = ({navigation, route}) => {
             alignItems: 'center',
           }}
           onPress={UplaodFile}>
-          <Typoghraphy color={Color.Black}>{fileResponse == null?'Resume':fileResponse?.name}</Typoghraphy>
+          <Typoghraphy color={Color.Black}>
+            {
+              fileResponse == null?
+              'Resume':
+              fileResponse?.name?.length <= 25 ? fileResponse?.name : `${fileResponse?.name?.substring(0,25)}...`
+            }
+          </Typoghraphy>
           <Image
             source={{
               uri: 'https://cdn-icons-png.flaticon.com/128/1665/1665680.png',

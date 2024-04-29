@@ -1,8 +1,9 @@
 import {StyleSheet, Text, View, Image, Pressable, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import {Color} from '../../Constants/Color';
 import Typoghraphy from '../Typoghraphy';
 import Button from '../Button';
+import { GlobalVariable } from '../../../App';
 
 const JobCategoryBox = ({
   CompanyName,
@@ -12,7 +13,9 @@ const JobCategoryBox = ({
   Mode,
   onPress,
   Desc,
+  applicants
 }) => {
+  const {userDetails, userID} = useContext(GlobalVariable);
   return (
     <View
       style={{
@@ -75,7 +78,7 @@ const JobCategoryBox = ({
           color={Color.Purple}
           fontWeight="700"
           style={{textAlign: 'right',}}>
-          Apply Now
+          {applicants?.includes(userDetails?.id)?"Already Applied":"Apply Now"}
         </Typoghraphy>
       </TouchableOpacity>
       {/* <Button

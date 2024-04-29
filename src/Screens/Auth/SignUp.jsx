@@ -54,13 +54,20 @@ const SignUp = ({navigation}) => {
                   setLoading(false)
                   navigation.goBack();
               })
-              .catch((e)=>{
-                console.log(e)
+              .catch((error)=>{
+                console.log(error?.data?.code)
                 setLoading(false)
               })
           })
           .catch((error) => {
-              console.log(error);
+              if(error?.data?.code === "auth/invalid-email")
+                alert("Invalid email ID.")
+              else if(error?.data?.code === "auth/email-already-in-use")
+                alert("Email already in use, try again with another email ID.")
+              else if(error?.data?.code === "auth/email-already-exists")
+                alert("Email already exists, try again with another email ID.")
+              else 
+                alert("Unable to create account, try again after sometime.")
               setLoading(false)
           })
           // await auth()

@@ -9,16 +9,20 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import firestore, {Filter} from '@react-native-firebase/firestore';
 import SearchBar from '../../Components/SeekerComp/SearchBar';
 import Typoghraphy from '../../Components/Typoghraphy';
+import { useIsFocused } from '@react-navigation/native';
+import Service from '../../Network/ApiService/Api_Helper';
+import { FIREBASE_COLLECTION } from '../../Constants/collections';
 
 const HomeSeeker = ({navigation}) => {
   const [loading,setLoading]=useState(false);
   const [Jobs, setJobs] = useState([]);
   const [SearchPro, setSearchPro] = useState([]);
   const [searchValue,setSearchValue]=useState("");
+  const isFocused=useIsFocused()
 
   useEffect(() => {
     getAllJobs();
-  }, []);
+  }, [isFocused]);
 
   const getAllJobs = async () => {
     try {
@@ -92,6 +96,7 @@ const HomeSeeker = ({navigation}) => {
                 Salary={item?.Salart}
                 MinExp={item?.MinExp ? `${item?.MinExp} years` : undefined}
                 Mode={item?.JobMode}
+                applicants={item?.interestedUsers?item?.interestedUsers:[]}
                 Desc={item?.JobDesc.substr(0, 200)}
                 onPress={() => {
                   navigation.navigate('JobDescription', { JobDetail: item });

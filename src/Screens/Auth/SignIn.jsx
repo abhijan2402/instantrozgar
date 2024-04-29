@@ -51,35 +51,14 @@ const SignIn = ({navigation}) => {
           })
           .catch((error) => {
             setLoading(false)
-            console.debug(error);
+            // if(error?.data?.code == "auth/invalid-credential")
+              alert("Wrong email or password")
+            // else
+              // console.debug(error?.data?.code);
           })
       }
-        // try {
-        //   await auth()
-        //     .signInWithEmailAndPassword(email, password)
-        //     .then(async userCredential => {
-        //       console.log(userCredential.user, 'USER HERE');
-        //       refreshAuth();
-        //       const user = userCredential.user;
-        //     });
-        // } catch (error) {
-        //   console.log(error, 'ERROR');
-
-        //   if (error.code === 'auth/weak-password') {
-        //     alert(error);
-        //     setLoading(false);
-        //   } else if (error.code === 'auth/email-already-in-use') {
-        //     setLoading(false);
-        //   } else {
-        //     alert(error);
-        //     console.log(error);
-        //   }
-        //   setLoading(false);
-        // }
-      // }
       } catch (error) {
-        console.log(error, 'ERROR');
-        alert(error);
+        alert(error?.data);
       } finally {
         setLoading(false);
       }
