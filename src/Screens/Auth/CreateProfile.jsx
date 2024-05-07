@@ -211,16 +211,6 @@ const CreateProfile = ({navigation, route}) => {
             setHighestQualification(value);
           }}
         />
-        {/* <TextInput
-        //   maxLength={4}
-        //   placeholder="Year of graduation"
-        //   placeholderTextColor={Color.Black}
-        //   style={styles.Input}
-        //   keyboardType="numeric"
-        //   onChangeText={value => {
-        //     setYearGraduation(value);
-        //   }}
-        // /> */}
         <DropDownPicker
           open={openYear}
           value={YearGraduation}
@@ -230,7 +220,8 @@ const CreateProfile = ({navigation, route}) => {
           setItems={setYears}
           placeholder={'Select Qualification Year'}
           style={{marginVertical: 10}}
-          zIndex={20000}
+          zIndex={200000}
+          listMode="SCROLLVIEW"
         />
 
         <DropDownPicker
@@ -243,21 +234,6 @@ const CreateProfile = ({navigation, route}) => {
           placeholder={'Select Gender'}
           style={{marginVertical: 10}}
         />
-        {/* <TouchableOpacity
-          style={{
-            borderWidth: 1,
-            borderRadius: 8,
-            height: 52,
-            justifyContent: 'center',
-            paddingHorizontal: 10,
-            marginVertical: 10,
-          }}
-          onPress={() => {
-            setOpen2(true);
-          }}>
-          <Typoghraphy color={Color.Black}>Date of birth</Typoghraphy>
-        </TouchableOpacity> */}
-
         <View
           style={{
             display: 'flex',
@@ -337,16 +313,6 @@ const CreateProfile = ({navigation, route}) => {
           placeholder={'Select City'}
           style={{marginVertical: 10}}
         />
-        {/* <DropDownPicker
-          open={open}
-          value={value}
-          items={items}
-          setOpen={setOpen}
-          setValue={setValue}
-          setItems={setItems}
-          placeholder={'Select State'}
-          style={{marginVertical: 10}}
-        /> */}
         <TouchableOpacity
           style={{
             borderWidth: 1,
@@ -375,19 +341,6 @@ const CreateProfile = ({navigation, route}) => {
             style={{width: 25, height: 25}}
           />
         </TouchableOpacity>
-        {/* {fileResponse == null ? (
-          ''
-        ) : (
-          <Image
-            source={{uri: fileResponse?.uri}}
-            style={{
-              width: 100,
-              height: 100,
-              alignSelf: 'center',
-              marginVertical: 10,
-            }}
-          />
-        )} */}
         <Button
           onPress={() => {
             handleDocumentSelection();

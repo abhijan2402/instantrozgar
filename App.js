@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable prettier/prettier */
 import { ActivityIndicator, StatusBar, StyleSheet, Text, View } from 'react-native';
 import React, { createContext, useEffect, useState } from 'react';
 import Selection from './src/Screens/Auth/Selection';
@@ -24,8 +26,8 @@ const App = () => {
   const [user, setUser] = useState(false);
   const [userDetails, setUserDetails] = useState(null);
   // user type
-  const [userType, setUserType] = useState("");
-  const [isProfileCompleted, setIsProfileCompleted] = useState(false)
+  const [userType, setUserType] = useState('');
+  const [isProfileCompleted, setIsProfileCompleted] = useState(false);
 
   const Stack = createNativeStackNavigator();
   const [loading, setLoading] = useState(true);
@@ -36,17 +38,15 @@ const App = () => {
 
   const checkForUser = async (data) => {
     if (auth().currentUser) {
-      setUser(auth().currentUser.uid)
+      setUser(auth().currentUser.uid);
       const userData = await firestore().collection(FIREBASE_COLLECTION.SEEKER).doc(auth().currentUser.uid).get();
-      setUserDetails({ ...userData?._data, id: auth().currentUser.uid })
-      console.log(userData?._data?.isProfileComplete, 'data');
-      console.log(userData?._data?.type, "USEERRRTYOOOOE");
-      setUserType(userData?._data?.type)
+      setUserDetails({ ...userData?._data, id: auth().currentUser.uid });
+      setUserType(userData?._data?.type);
       await AsyncStorage.setItem('Type', userData?._data?.type);
       if (userData?._data?.isProfileComplete) {
-        setIsProfileCompleted(true)
+        setIsProfileCompleted(true);
       } else {
-        setIsProfileCompleted(false)
+        setIsProfileCompleted(false);
       }
       setLoading(false);
     } else {
@@ -125,5 +125,3 @@ const App = () => {
 };
 
 export default App;
-
-const styles = StyleSheet.create({});
