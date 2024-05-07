@@ -24,7 +24,7 @@ const HomeProvider = ({navigation}) => {
   const {userDetails, userID} = useContext(GlobalVariable);
   const [Loader, setLoader] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
-
+  console.log(userDetails, 'USERID');
   useEffect(() => {
     JobsList();
   }, []);
@@ -34,7 +34,7 @@ const HomeProvider = ({navigation}) => {
     const resultedArray = [];
     const performanceData = await firestore()
       .collection('JobList')
-      .where('CompanyID', '==', userID)
+      .where('CompanyID', '==', userDetails?.id)
       .get();
     performanceData.forEach(item => {
       resultedArray.push({...item.data(), id: item.id});

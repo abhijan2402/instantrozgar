@@ -23,7 +23,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { validateEmail } from '../../utils/Validators';
 
 const CreateProfileRecruter = ({ route }) => {
-    const {userDetails, refreshAuth} = useContext(GlobalVariable);
+    const { userDetails, refreshAuth } = useContext(GlobalVariable);
     // console.log(userDetails, data, "USER___DETAILS");
     const [open, setOpen] = useState(false);
     const [value, setValue] = useState(null);
@@ -125,7 +125,7 @@ const CreateProfileRecruter = ({ route }) => {
                     .then(async (res) => {
                         console.log(res, "RESPPPPPPPP");
 
-                        refreshAuth(data)
+                        refreshAuth()
                     }).catch((err) => {
                         console.log(err);
                     })

@@ -49,7 +49,7 @@ const AddJob = ({navigation}) => {
           JobDesc: JobDesc,
           JobMode: value,
           status: 'Pending',
-          CompanyID: userID,
+          CompanyID: userDetails?.id,
           CompanyName: userDetails?.CompanyName,
           MinExp: MinExp,
           City: userDetails?.city,

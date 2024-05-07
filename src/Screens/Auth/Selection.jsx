@@ -7,20 +7,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useContext } from 'react';
+import React, {useContext} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
 import LottieView from 'lottie-react-native';
 import {Color} from '../../Constants/Color';
 import Button from '../../Components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { GlobalVariable } from '../../../App';
+import {GlobalVariable} from '../../../App';
 
 const Selection = ({navigation}) => {
-  const {setUserType}=useContext(GlobalVariable);
+  const {setUserType} = useContext(GlobalVariable);
   const UpdateType = async value => {
     const Type = await AsyncStorage.setItem('Type', value);
-    setUserType(value)
+    setUserType(value);
     navigation.navigate('SignIn');
   };
   return (
@@ -79,7 +79,7 @@ const Selection = ({navigation}) => {
           <TouchableOpacity
             onPress={() => {
               console.log('jio');
-              UpdateType('Seeking');
+              UpdateType('Providing');
             }}
             style={styles.JobBtnMainView}>
             <Image
