@@ -43,8 +43,8 @@ const SignUp = ({navigation}) => {
       } else if (password.length < 6) {
         throw 'Password must be greater than 6 digits';
       } else {
-        setLoading(true);
         try {
+          setLoading(true);
           createNewUser(email, password)
           .then((respone) => {
               registerNewUser(respone.data.user.uid,{email: email,isVerified: false,type: userType,isProfileComplete: 0,})
@@ -70,49 +70,20 @@ const SignUp = ({navigation}) => {
                 alert("Unable to create account, try again after sometime.")
               setLoading(false)
           })
-          // await auth()
-          //   .createUserWithEmailAndPassword(email, password)
-          //   .then(async userCredential => {
-          //     console.log(userCredential.user, 'USER_CREATED');
-          //     const user = userCredential.user;
-              // return firestore().collection('Seeker').doc(user.uid).set({
-              //     email: email,
-              //     isVerified: false,
-              //     type: userType,
-              //     isProfileComplete: 0,
-              //   })
-          //       .then(async () => {
-          //         if (Type == 'Seeking') {
-          //           navigation.replace('CreateProfile', {userID: user.uid});
-          //         } else {
-          //           navigation.replace('CreateProfileRecruter', {
-          //             userID: user.uid,
-          //           });
-          //         }
-          //       })
-          //       .catch(error => {
-          //         console.log(error);
-          //       })
-          //       .finally(() => setLoading(false));
-          //   });
         } catch (error) {
           console.log(error, 'ERROR');
           if (error.code === 'auth/weak-password') {
-            setLoading(false);
           } else if (error.code === 'auth/email-already-in-use') {
             alert('email address already in use');
-            setLoading(false);
           } else {
             alert(error);
           }
-          setLoading(false);
         }
       }
     } catch (error) {
       console.log(error, 'ERROR');
       alert(error);
     } finally {
-      setLoading(false);
     }
   };
   return (

@@ -1,5 +1,5 @@
 import {ScrollView,StyleSheet,Text,View,TextInput,TouchableOpacity,Image, Dimensions} from 'react-native';
-import React, {useContext, useState} from 'react';
+import React, {useContext, useRef, useState} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
 import {Color} from '../../Constants/Color';
@@ -15,12 +15,14 @@ import {graduationTest, phonenumber} from '../../utils/Validators';
 import { FIREBASE_COLLECTION } from '../../Constants/collections';
 import DocumentPicker from 'react-native-document-picker'
 import { generateYears } from '../../utils/helpers';
+import FeedSheet from '../../Components/common/BottomSheet';
+import { FILE_ICON, GALLARY_ICON } from '../../Constants/data';
 
 const {width} = Dimensions.get("screen");
 
 const CreateProfile = ({navigation, route}) => {
   const {userDetails, refreshAuth} = useContext(GlobalVariable);
-// console.log(userDetails?.id,'bjuibuj');
+  const bottomSheetRef=useRef();
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([
@@ -59,6 +61,7 @@ const CreateProfile = ({navigation, route}) => {
   const [DOB, setDOB] = useState(null);
   const [skills, setskills] = useState(null);
   const [Resume, setResume] = useState(null);
+  const [mediaType,setMediaType]=useState("")
 
   const [fileResponse, setFileResponse] = useState(null);
   const [SkillsArr, setSkillsArr] = useState([
@@ -78,6 +81,7 @@ const CreateProfile = ({navigation, route}) => {
       ],
       copyTo: 'documentDirectory',
     });
+    setMediaType("docs")
     console.log(response[0]);
     setFileResponse(response[0]);
   };
@@ -114,7 +118,7 @@ const CreateProfile = ({navigation, route}) => {
         setloading(true);
         // const reference = await storage().ref(`/${fileResponse.name}`).putFile(`${fileResponse?.uri}`);
         const reference = storage().ref(`pdfs/${fileResponse.name}`);
-        await reference.putFile(fileResponse.fileCopyUri);
+        await reference.putFile(mediaType==="docs"?fileResponse.fileCopyUri:fileResponse?.uri);
         const url = await storage().ref(`pdfs/${fileResponse.name}`).getDownloadURL();
         // console.log(url,'nknokjl');
         UpdateData(url, demoArr);
@@ -167,6 +171,23 @@ const CreateProfile = ({navigation, route}) => {
     });
     setSkillsArr(Data);
   };
+
+  const getFromGallery=async()=>{
+    try {
+      const result = await launchImageLibrary({
+        mediaType: 'photo',
+        maxWidth: windowWidth,
+        maxHeight: windowHeight,
+        quality: 1,
+      });
+      setMediaType("gallery")
+      console.log(result?.assets[0]);
+      setFileResponse({name: result?.assets[0]?.fileName,type: 'image/jpeg',uri:Platform.OS === 'ios'? result?.assets[0]?.uri: result?.assets[0]?.uri,});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <ScrollView nestedScrollEnabled={true} style={styles.MainContainer}>
       <Header title={'Create Profile'} leftIcon={true} />
@@ -312,6 +333,7 @@ const CreateProfile = ({navigation, route}) => {
           setItems={setItems1}
           placeholder={'Select City'}
           style={{marginVertical: 10}}
+          listMode='SCROLLVIEW'
         />
         <TouchableOpacity
           style={{
@@ -326,12 +348,18 @@ const CreateProfile = ({navigation, route}) => {
             justifyContent: 'space-between',
             alignItems: 'center',
           }}
-          onPress={UplaodFile}>
+          onPress={()=>{
+            bottomSheetRef.current.openOptions();
+          }}>
           <Typoghraphy color={Color.Black}>
             {
               fileResponse == null?
               'Resume':
-              fileResponse?.name?.length <= 25 ? fileResponse?.name : `${fileResponse?.name?.substring(0,25)}...`
+              (
+                mediaType=="docs"?
+                fileResponse?.name?.length <= 25 ? fileResponse?.name : `${fileResponse?.name?.substring(0,25)}...`:
+                fileResponse?.name?.length <= 25 ? fileResponse?.name : `${fileResponse?.name?.substring(0,25)}...`
+              )
             }
           </Typoghraphy>
           <Image
@@ -354,6 +382,34 @@ const CreateProfile = ({navigation, route}) => {
           title={'Search Jobs'}
         />
       </View>
+      <FeedSheet ref={bottomSheetRef}>
+        <View style={[{marginTop: 10,alignItems: 'center',justifyContent: 'space-evenly',width: '100%',flexDirection:"row"},]}>
+          <TouchableOpacity
+            onPress={() => {
+              bottomSheetRef.current.closeOptions();
+              getFromGallery()
+            }}
+            style={{alignItems: 'center',paddingHorizontal: 20,paddingVertical: 10,}}
+          >
+            <Image style={{width:20,height:20}} source={GALLARY_ICON} />
+            <Text style={{fontSize: 12,color: Color.Black,marginTop: 6,}}>
+              Gallery
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              bottomSheetRef.current.closeOptions();
+              UplaodFile();
+            }}
+            style={{alignItems: 'center',paddingHorizontal: 20,paddingVertical: 10,}}
+          >
+            <Image style={{width:20,height:20}} source={FILE_ICON} />
+            <Text style={{fontSize: 12,color: Color.Black,marginTop: 6,}} >
+              Document
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </FeedSheet>
     </ScrollView>
   );
 };

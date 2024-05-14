@@ -21,7 +21,7 @@ const Button = ({
     <TouchableOpacity
       disabled={disabled}
       onPress={onPress}
-      style={[{alignItems: 'center'}, BtnStyle]}>
+      style={[{alignItems: 'center',height:45}, BtnStyle]}>
       {loading ? (
         <ActivityIndicator color={loaderColor} size={25} />
       ) : (

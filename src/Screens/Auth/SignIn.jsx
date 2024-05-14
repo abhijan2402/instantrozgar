@@ -59,8 +59,6 @@ const SignIn = ({navigation}) => {
       }
       } catch (error) {
         alert(error?.data);
-      } finally {
-        setLoading(false);
       }
   };
   return (
