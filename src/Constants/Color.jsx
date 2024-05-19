@@ -9,4 +9,6 @@ export const Color = {
   Transparent:"transparent",
   Grey:"rgba(97, 97, 97, 1)",
   Light_grey:"#F6F6F6",
+  DARK_GREEN:"",
+  LIGHT_GREEN:"#00B65B"
 };

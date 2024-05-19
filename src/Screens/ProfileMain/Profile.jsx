@@ -1,5 +1,5 @@
 import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useContext} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import Header from '../../Components/Header';
 import Typoghraphy from '../../Components/Typoghraphy';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
@@ -10,9 +10,11 @@ import auth from '@react-native-firebase/auth';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { logout } from '../../Network/auth/auth';
 import DownloadMedia from '../../Components/common/DownloadMedia';
+import { getJobRoles } from '../../Network/HelperFunctions/common';
 
 const Profile = () => {
-  const {setUser, userDetails,setUserType} = useContext(GlobalVariable);
+  const {setUser, userDetails,setUserType} = useContext(GlobalVariable);  
+
   return (
     <ScrollView style={styles.MainContainer}>
       <Header title={'Profile'} />
@@ -29,10 +31,10 @@ const Profile = () => {
               {userDetails?.Name}
             </Typoghraphy>
             <Typoghraphy size={15} color={Color.Grey} fontWeight="700" style={{fontSize:12}}>
-              takchirag828@gmail.com
+              {userDetails?.email}
             </Typoghraphy>
             <Typoghraphy size={15} color={Color.Grey} fontWeight="700" style={{fontSize:12}}>
-              8080808008
+              {userDetails?.Number}
             </Typoghraphy>
           </View>
           {/* <FontAwesome
