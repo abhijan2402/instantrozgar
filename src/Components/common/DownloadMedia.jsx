@@ -1,12 +1,13 @@
-import { View, Text, StyleSheet, Platform, PermissionsAndroid, Alert } from 'react-native'
+import { View, Text, StyleSheet, Image, PermissionsAndroid, Alert, Pressable, TouchableOpacity, ImageBackground } from 'react-native'
 import React, { useState } from 'react'
 import Button from '../Button';
 import { Color } from '../../Constants/Color';
 import RNFetchBlob from 'rn-fetch-blob';
+import { windowWidth } from '../../Constants/Dimension';
 
 const DownloadMedia = ({fileUrl}) => {
-    const [loading,setLoading]=useState(false)
-    ;
+    const [loading,setLoading]=useState(false);
+
     const getFileExtention = fileUrl => {
         const match = /\.([^.?]+)(?:\?|$)/.exec(fileUrl);
         return match ? match[1] : undefined;
@@ -45,34 +46,43 @@ const DownloadMedia = ({fileUrl}) => {
       };
 
     return (
-        <Button
-            onPress={downloadFile}
-            BtnStyle={[
-                styles.BtnStyle,
-                {borderWidth: 2, borderColor: Color.ThemeBlue,backgroundColor:Color.white,marginBottom:8},
-            ]}
-            BtnTxtStyle={[styles.BtnTxtStyle,{color:Color.LightBlue,}]}
-            title={'Download Resume'}
-            loading={loading}
-            loaderColor={Color.LightBlue}
-        />
+        <View style={styles.box} >
+          <ImageBackground
+            blurRadius={2}
+            resizeMode='cover'
+            style={{width:'100%',height:70}} 
+            source={require("../../assets/Images/rm.png")} 
+          />
+          <Text style={styles.verifiedText}>Verified</Text>
+          <TouchableOpacity onPress={downloadFile} >
+            <Text style={{borderTopWidth:1,height:30,fontWeight:"600",fontSize:10,paddingVertical:4,paddingHorizontal:6,borderTopColor:Color.Light_grey}}>
+              Download Resume
+            </Text>
+          </TouchableOpacity>
+        </View>
     )
 }
 const styles=StyleSheet.create({
-    BtnStyle: {
-        paddingVertical: 5,
-        paddingHorizontal: 20,
-        borderRadius: 6,
-        width: '90%',
-        marginVertical: 2,
-        alignSelf: 'center',
-        backgroundColor: Color.ThemeBlue,
-        height:40
-      },
-      BtnTxtStyle: {
-        fontSize: 16,
-        fontWeight: '700',
-        color: Color.White,
-      },
+  box: {
+    width:windowWidth/2.5,
+    height:100,
+    marginHorizontal:20,
+    marginBottom:10,
+    borderRadius:10,
+    borderWidth:2,
+    borderColor:Color.Light_grey
+  },
+  verifiedText:{
+    color:Color.LIGHT_GREEN,
+    fontSize:8,
+    fontWeight:"800",
+    paddingHorizontal:10,
+    paddingVertical:4,
+    backgroundColor:"rgba(0,182,91,0.2)",
+    borderRadius:100,
+    position: 'absolute',
+    top:6,
+    right:6
+  }
 })
 export default DownloadMedia

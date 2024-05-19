@@ -1,39 +1,36 @@
 import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import Header from '../../Components/Header';
-import Button from '../../Components/Button';
 import {Color} from '../../Constants/Color';
 import {windowHeight} from '../../Constants/Dimension';
 import JobCategoryBox from '../../Components/SeekerComp/JobCategoryBox';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import firestore, {Filter} from '@react-native-firebase/firestore';
 import SearchBar from '../../Components/SeekerComp/SearchBar';
 import Typoghraphy from '../../Components/Typoghraphy';
 import { useIsFocused } from '@react-navigation/native';
-import Service from '../../Network/ApiService/Api_Helper';
-import { FIREBASE_COLLECTION } from '../../Constants/collections';
+import { GlobalVariable } from '../../../App';
+import { getAllJobs } from '../../Network/Seeker/Home';
+import JobFilter from './JobFilter';
 
 const HomeSeeker = ({navigation}) => {
+  const jobFilterRef=useRef();
   const [loading,setLoading]=useState(false);
   const [Jobs, setJobs] = useState([]);
   const [SearchPro, setSearchPro] = useState([]);
   const [searchValue,setSearchValue]=useState("");
-  const isFocused=useIsFocused()
+  const isFocused=useIsFocused();
+  const {userDetails} = useContext(GlobalVariable);  
 
   useEffect(() => {
-    getAllJobs();
+    getAllJobsLocal();
   }, [isFocused]);
 
-  const getAllJobs = async () => {
+  const getAllJobsLocal = async () => {
     try {
-      setLoading(true);
-      const resultedArray = [];
-      const performanceData = await firestore().collection('JobList').get();
-      performanceData.forEach(item => {
-        resultedArray.push({...item.data(), id: item.id});
-      });
-      setJobs(resultedArray);
-      setSearchPro(resultedArray);
+      let jobs=await getAllJobs(userDetails);
+      if(jobs?.error)
+        throw jobs?.data;
+      setJobs(jobs?.data);
+      setSearchPro(jobs?.data);
     } catch (error) {
       console.log(error)
     }finally{
@@ -64,6 +61,7 @@ const HomeSeeker = ({navigation}) => {
 
   return (
     <View style={{height: windowHeight, backgroundColor: Color.White}}>
+      <JobFilter ref={jobFilterRef} />
       <Header title={'Find Jobs'} />
       <View style={styles.ContentContainer}>
         <SearchBar

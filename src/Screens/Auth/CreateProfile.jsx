@@ -1,5 +1,5 @@
 import {ScrollView,StyleSheet,Text,View,TextInput,TouchableOpacity,Image, Dimensions} from 'react-native';
-import React, {useContext, useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {windowHeight, windowWidth} from '../../Constants/Dimension';
 import Typoghraphy from '../../Components/Typoghraphy';
 import {Color} from '../../Constants/Color';
@@ -17,6 +17,7 @@ import DocumentPicker from 'react-native-document-picker'
 import { generateYears } from '../../utils/helpers';
 import FeedSheet from '../../Components/common/BottomSheet';
 import { FILE_ICON, GALLARY_ICON } from '../../Constants/data';
+import { getJobRoles } from '../../Network/HelperFunctions/common';
 
 const {width} = Dimensions.get("screen");
 
@@ -72,6 +73,26 @@ const CreateProfile = ({navigation, route}) => {
     {name: 'Backend Development', isSelcted: false},
     {name: 'Content Writing', isSelcted: false},
   ]);
+  const [prefferedRoles,setPrefferedROles]=useState([]);
+
+  const [jobRoles,setJobRoles]=useState([]);
+
+  useEffect(()=>{
+    getRoles();
+  },[]);
+
+  const getRoles=async()=>{
+    try {
+      const data=await getJobRoles();
+      if(data?.error)
+        throw data?.data;
+      let roles=data?.data?.find((item)=>item?.id === "jobRoles");
+      setJobRoles(roles?.role);
+    } catch (error) {
+      console.log(error,"errior rtole");
+    }
+  }
+
   const UplaodFile = async () => {
     const response = await DocumentPicker.pick({
       presentationStyle: 'fullScreen',
@@ -89,13 +110,11 @@ const CreateProfile = ({navigation, route}) => {
     let check = false;
     let demoArr = [];
     let testArr = SkillsArr.filter(i => i?.isSelcted != true);
-    // console.log(testArr, testArr.length);
     if (testArr.length == SkillsArr.length) {
       check = true;
     } else {
       check = false;
       demoArr = SkillsArr.filter(i => i?.isSelcted != false);
-      // console.log(demoArr, 'DEMOARR');
     }
     try {
       if (
@@ -114,6 +133,8 @@ const CreateProfile = ({navigation, route}) => {
         throw 'Year of graduation must be valid';
       } else if (check) {
         throw 'Please select skills';
+      }else if(prefferedRoles?.length===0){
+        throw 'Add atleast one role for job';
       } else {
         setloading(true);
         // const reference = await storage().ref(`/${fileResponse.name}`).putFile(`${fileResponse?.uri}`);
@@ -145,6 +166,7 @@ const CreateProfile = ({navigation, route}) => {
         // DOB: date,
         isProfileComplete: 1,
         Number: Numbers,
+        jobRoles:prefferedRoles
       })
       .then(res => {
         console.log(res, 'RESPPPPPPPP');
@@ -187,7 +209,7 @@ const CreateProfile = ({navigation, route}) => {
       console.log(error);
     }
   }
-
+// console.log(prefferedRoles,"role");
   return (
     <ScrollView nestedScrollEnabled={true} style={styles.MainContainer}>
       <Header title={'Create Profile'} leftIcon={true} />
@@ -323,6 +345,49 @@ const CreateProfile = ({navigation, route}) => {
                 </TouchableOpacity>
               ))
             : null}
+        </View>
+        <Text style={{color:Color.Black,fontWeight:'600',marginTop:10}} >
+          Preffered Roles
+        </Text>
+        <View
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
+          {
+            jobRoles?.length >0 &&
+            jobRoles?.map((item)=>(
+              <TouchableOpacity
+                  onPress={() => {
+                    if(prefferedRoles.includes(item)){
+                      let newRoles=[];
+                      newRoles=prefferedRoles.filter((value)=> value != item);
+                      setPrefferedROles(newRoles);
+                    }else{
+                      setPrefferedROles([...prefferedRoles,item]);
+                    }
+                  }}
+                  style={{
+                    borderWidth: 0.5,
+                    marginRight: 5,
+                    borderRadius: 8,
+                    padding: 5,
+                    marginVertical: 5,
+                    backgroundColor: prefferedRoles.includes(item)?Color.ThemeBlue:Color.White,
+                    borderWidth: 0.5,
+                  }}>
+                  <Typoghraphy
+                    size={11}
+                    color={prefferedRoles.includes(item) ? Color.White : Color.Black}
+                  >
+                    {item}
+                  </Typoghraphy>
+                </TouchableOpacity>
+            ))
+          }
         </View>
         <DropDownPicker
           open={open1}
