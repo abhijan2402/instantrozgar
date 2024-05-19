@@ -4,13 +4,15 @@ import { windowWidth } from '../../Constants/Dimension';
 import { Color } from '../../Constants/Color';
 import { getJobRoles } from '../../Network/HelperFunctions/common';
 import Typoghraphy from '../../Components/Typoghraphy';
+import {Slider} from '@miblanchard/react-native-slider';
 
 
 const JobFilter = forwardRef(({ onPress }, ref) => {
-    const [openPopup, setOpenPopup] = useState(true);
+    const [openPopup, setOpenPopup] = useState(false);
     const [prefferedRoles,setPrefferedROles]=useState([]);
     const [loading,setLoading]=useState(false);
     const [jobRoles,setJobRoles]=useState([]);
+    const [sliderValue,setSliderValues]=useState(0.2);
 
     useEffect(()=>{
         getRoles();
@@ -96,6 +98,11 @@ const JobFilter = forwardRef(({ onPress }, ref) => {
                     <Text style={{color:Color.Black,fontWeight:'600',marginTop:10}} >
                         Expected Salary
                     </Text>
+                    <Slider
+                        value={sliderValue}
+                        onValueChange={value => console.log(value)}
+                    />
+                    <Text>Value: {sliderValue}</Text>
                 </View>
             </View>
         </Modal>
