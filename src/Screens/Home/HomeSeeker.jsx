@@ -1,4 +1,4 @@
-import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
+import {ActivityIndicator, FlatList, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
 import React, {useContext, useEffect, useRef, useState} from 'react';
 import Header from '../../Components/Header';
 import {Color} from '../../Constants/Color';
@@ -73,6 +73,18 @@ const HomeSeeker = ({navigation}) => {
           backgroundColor={Color.Light_grey}
           onSearchValue={value=>FilterFunc(value)}
         />
+        <View style={{ width: '90%', alignSelf: 'center' }}>
+          <TouchableOpacity
+            onPress={() => jobFilterRef.current.openOptions()}
+            style={[{alignItems: 'center',paddingHorizontal:10,height: 30,alignSelf: 'flex-end',borderRadius: 4,justifyContent: 'space-evenly',backgroundColor: Color.Light_grey,fontWeight:'600'},]}
+          >
+            <Text
+              style={[styles.textStyle,{  },]}
+            >
+              Apply Filter
+            </Text>
+          </TouchableOpacity>
+        </View>
         {
           loading ? <ActivityIndicator size={30} color={Color.LightBlue} />:
           <FlatList
@@ -120,7 +132,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     marginHorizontal: 8,
   },
-  ContentContainer: {
-
+  textStyle: {
+    color: Color.Black,
+    fontSize: 12,
   },
 });

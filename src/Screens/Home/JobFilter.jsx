@@ -5,6 +5,7 @@ import { Color } from '../../Constants/Color';
 import { getJobRoles } from '../../Network/HelperFunctions/common';
 import Typoghraphy from '../../Components/Typoghraphy';
 import {Slider} from '@miblanchard/react-native-slider';
+import Button from '../../Components/Button';
 
 
 const JobFilter = forwardRef(({ onPress }, ref) => {
@@ -12,7 +13,7 @@ const JobFilter = forwardRef(({ onPress }, ref) => {
     const [prefferedRoles,setPrefferedROles]=useState([]);
     const [loading,setLoading]=useState(false);
     const [jobRoles,setJobRoles]=useState([]);
-    const [sliderValue,setSliderValues]=useState(0.2);
+    const [sliderValue,setSliderValues]=useState(0);
 
     useEffect(()=>{
         getRoles();
@@ -35,12 +36,18 @@ const JobFilter = forwardRef(({ onPress }, ref) => {
 
     useImperativeHandle(ref, () => ({
         openOptions() {
-        setOpenPopup(true);
+            setOpenPopup(true);
         },
         closeOptions() {
-        setOpenPopup(false);
+            setOpenPopup(false);
         },
     }));
+
+    const filterData=()=>{
+        console.log(prefferedRoles);
+        console.log(sliderValue);
+        setOpenPopup(false);
+    }
 
     return (
         <Modal
@@ -99,10 +106,19 @@ const JobFilter = forwardRef(({ onPress }, ref) => {
                         Expected Salary
                     </Text>
                     <Slider
-                        value={sliderValue}
-                        onValueChange={value => console.log(value)}
+                        // value={sliderValue}
+                        onValueChange={value => setSliderValues(Math.round(value*100))}
                     />
-                    <Text>Value: {sliderValue}</Text>
+                    <Button
+                        onPress={filterData}
+                        BtnStyle={[
+                            styles.BtnStyle,
+                            {borderWidth: 2, borderColor: Color.ThemeBlue},
+                        ]}
+                        BtnTxtStyle={[styles.BtnTxtStyle]}
+                        title={'Search Job'}
+                    />
+                    {/* <Text style={{color:Color.Black,fontWeight:'600',marginTop:10}}>Value: {sliderValue}</Text> */}
                 </View>
             </View>
         </Modal>
@@ -126,6 +142,21 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
         paddingHorizontal: 14,
         paddingTop: 20,
+    },
+    BtnStyle: {
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        borderRadius: 6,
+        width: '50%',
+        marginTop: 2,
+        alignSelf: 'center',
+        backgroundColor: Color.ThemeBlue,
+        height:40
+      },
+      BtnTxtStyle: {
+        fontSize: 16,
+        fontWeight: '700',
+        color: Color.White,
     },
 });
 export default JobFilter;
