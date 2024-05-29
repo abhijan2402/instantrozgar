@@ -1,24 +1,28 @@
 import {
   Image,
+  ImageBackground,
   ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useContext} from 'react';
+import React, { useContext } from 'react';
 import Header from '../../Components/Header';
 import Typoghraphy from '../../Components/Typoghraphy';
-import {windowHeight, windowWidth} from '../../Constants/Dimension';
-import {Color} from '../../Constants/Color';
+import { windowHeight, windowWidth } from '../../Constants/Dimension';
+import { Color } from '../../Constants/Color';
 import Button from '../../Components/Button';
 import LottieView from 'lottie-react-native';
-import {GlobalVariable} from '../../../App';
+import { GlobalVariable } from '../../../App';
 import auth from '@react-native-firebase/auth';
 
+const bg_img = require('../../assets/LottieFiles/JobRecruProfile.json');
+const loc_img = require('../../assets/Images/map.png')
+
 const ProfileCompany = () => {
-  const {setUser} = useContext(GlobalVariable);
-  const {userDetails} = useContext(GlobalVariable);
+  const { setUser } = useContext(GlobalVariable);
+  const { userDetails } = useContext(GlobalVariable);
 
   return (
     <View style={styles.MainContainer}>
@@ -41,7 +45,7 @@ const ProfileCompany = () => {
             height: windowHeight / 2.5,
             width: windowWidth,
             alignSelf: 'center',
-            // borderWidth: 1,
+            marginTop: 18
           }}
         />
         {/* <View style={[styles.InfoBox, {marginTop: 20}]}>
@@ -52,7 +56,7 @@ const ProfileCompany = () => {
             {userDetails?.CompanyMail}
           </Typoghraphy>
         </View> */}
-        <View style={[styles.InfoBox]}>
+        {/* <View style={[styles.InfoBox]}>
           <Typoghraphy
             size={20}
             color={Color.Black}
@@ -81,6 +85,14 @@ const ProfileCompany = () => {
             style={styles.TxtSty}>
             Company Overview :
           </Typoghraphy>
+        </View> */}
+        <View style={styles.companyDetails}>
+
+          <Typoghraphy style={styles.companyName}>{userDetails?.CompanyName}</Typoghraphy>
+          <Typoghraphy style={styles.companyEmail}>{userDetails?.CompanyMail}</Typoghraphy>
+          <Typoghraphy style={styles.companyLocation}> <Image source={loc_img} style={styles.loc_img} />  {userDetails?.CompanyAddress}, {userDetails?.city}</Typoghraphy>
+          <Typoghraphy style={styles.companyDesc}>Lorem ipsum dolor sit amet consectetur adipisicing elit. Sed tempora quos minima consequatur? Nemo adipisci ea beatae? Delectus, enim cum?</Typoghraphy>
+
         </View>
 
         <Button
@@ -90,7 +102,7 @@ const ProfileCompany = () => {
           }}
           BtnStyle={[
             styles.BtnStyle,
-            {borderWidth: 2, borderColor: Color.ThemeBlue},
+            { borderWidth: 2, borderColor: Color.ThemeBlue },
           ]}
           BtnTxtStyle={[styles.BtnTxtStyle]}
           title={'Log Out'}
@@ -128,16 +140,60 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 8,
     width: windowWidth / 1.25,
-    marginVertical: 20,
+    marginVertical: 30,
     alignSelf: 'center',
     backgroundColor: Color.ThemeBlue,
+  
   },
   BtnTxtStyle: {
     fontSize: 20,
     fontWeight: '700',
     color: Color.White,
+    flex:1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   TxtSty: {
     marginVertical: 5,
+  },
+  companyDetails: {
+    marginTop: 4
+  },
+  companyName: {
+    fontSize: 30,
+    textAlign: 'center',
+    letterSpacing: 1.2
+  },
+  companyEmail: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 5
+  },
+  companyLocation: {
+    fontSize: 14,
+    letterSpacing: .4,
+    paddingLeft: 8,
+    paddingRight: 8,
+    textAlign: 'center',
+    marginTop: 5,
+  },
+  companyDesc: {
+    fontSize: 14,
+    letterSpacing: .4,
+    lineHeight:21,
+    paddingLeft: 8,
+    paddingRight: 8,
+    textAlign: 'center',
+    marginTop: 12,
+    color: Color.Grey
+  },
+  image: {
+    flex: 1,
+    justifyContent: 'center'
+  },
+  loc_img: {
+    width: 20,
+    height: 20,
+    marginRight: 2,
   },
 });
