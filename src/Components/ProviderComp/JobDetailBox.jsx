@@ -107,15 +107,17 @@ const styles = StyleSheet.create({
   },
   Btn: {
     alignSelf: 'flex-end',
+    alignItems: 'center',
+    justifyContent: 'center',
     width: windowWidth / 2,
     borderRadius: 5,
     marginHorizontal: 10,
     backgroundColor: Color.ThemeBlue,
     marginTop: 15,
+    marginBottom:10,
   },
   BtnTXt: {
     color: Color.White,
-    fontSize: 15,
-    marginVertical: 3,
+    fontSize: 14,
   },
 });

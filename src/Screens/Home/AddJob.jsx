@@ -1,16 +1,20 @@
-import {ScrollView, StyleSheet, Text, TextInput, View} from 'react-native';
-import React, {useContext, useState} from 'react';
+import { Image, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import React, { useContext, useState } from 'react';
 import Header from '../../Components/Header';
-import {windowHeight, windowWidth} from '../../Constants/Dimension';
-import {Color} from '../../Constants/Color';
+import { windowHeight, windowWidth } from '../../Constants/Dimension';
+import { Color } from '../../Constants/Color';
 import Button from '../../Components/Button';
 import firestore from '@react-native-firebase/firestore';
-import {GlobalVariable} from '../../../App';
+import { GlobalVariable } from '../../../App';
 import DropDownPicker from 'react-native-dropdown-picker';
-import {ValidateNumber} from '../../utils/Validators';
+import { ValidateNumber } from '../../utils/Validators';
+import Typoghraphy from '../../Components/Typoghraphy';
+import warning from '../../assets/Images/warning.png';
+import CheckBox from '@react-native-community/checkbox';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
-const AddJob = ({navigation}) => {
-  const {userDetails, userID} = useContext(GlobalVariable);
+const AddJob = ({ navigation }) => {
+  const { userDetails, userID } = useContext(GlobalVariable);
   console.log(userDetails);
   const [JobRole, setJobRole] = useState('');
   const [Salart, setSalart] = useState(0);
@@ -22,10 +26,20 @@ const AddJob = ({navigation}) => {
   const [value, setValue] = useState(null);
   const [MinExp, setMinExp] = useState(null);
   const [items, setItems] = useState([
-    {label: 'Remote', value: 'Remote'},
-    {label: 'Onsite', value: 'Onsite'},
-    {label: 'Hybrid', value: 'Hybrid'},
+    { label: 'Remote', value: 'Remote' },
+    { label: 'Onsite', value: 'Onsite' },
+    { label: 'Hybrid', value: 'Hybrid' },
   ]);
+
+
+  // State for checkboxes
+  const [acceptCall, setAcceptCall] = useState(true);
+  const [acceptEmail, setAcceptEmail] = useState(true);
+  const [acceptWhatsapp, setAcceptWhatsapp] = useState(true);
+
+  console.log("this is accept", acceptCall);
+
+
   const AddJobs = async () => {
     try {
       if (
@@ -54,6 +68,9 @@ const AddJob = ({navigation}) => {
           MinExp: MinExp,
           City: userDetails?.city,
           CompanyAddress: userDetails?.CompanyAddress,
+          AcceptCall: acceptCall,
+          AcceptEmail: acceptEmail,
+          AcceptWhatsapp: acceptWhatsapp,
         };
         setloading(true);
         await firestore()
@@ -88,7 +105,7 @@ const AddJob = ({navigation}) => {
           navigation.goBack();
         }}
       />
-      <View style={{marginHorizontal: 20}}>
+      <View style={{ marginHorizontal: 20 }}>
         <TextInput
           placeholder="Job Role"
           placeholderTextColor={Color.Black}
@@ -131,7 +148,7 @@ const AddJob = ({navigation}) => {
           setValue={setValue}
           setItems={setItems}
           placeholder={'Job Mode'}
-          style={{marginVertical: 10}}
+          style={{ marginVertical: 10 }}
         />
         <TextInput
           multiline
@@ -144,7 +161,33 @@ const AddJob = ({navigation}) => {
             setJobDesc(value);
           }}
         />
-
+        <View style={styles.CheckBox_Main_Container}>
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              value={acceptCall}
+              onValueChange={setAcceptCall}
+            />
+            <Text style={styles.label}>Accept Call</Text>
+          </View>
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              value={acceptEmail}
+              onValueChange={setAcceptEmail}
+            />
+            <Text style={styles.label}>Accept Email</Text>
+          </View>
+          <View style={styles.checkboxContainer}>
+            <CheckBox
+              value={acceptWhatsapp}
+              onValueChange={setAcceptWhatsapp}
+            />
+            <Text style={styles.label}>Accept WhatsApp</Text>
+          </View>
+        </View>
+        <View style={styles.warning_cont}>
+          <Image source={warning} style={styles.warning_Image} />
+          <Typoghraphy style={styles.warning_text}>Important: Your account will be blocked & legal action will be taken incase of fraudulent activity.</Typoghraphy>
+        </View>
         <Button
           onPress={() => {
             AddJobs();
@@ -152,7 +195,7 @@ const AddJob = ({navigation}) => {
           loading={loading}
           BtnStyle={[
             styles.BtnStyle,
-            {borderWidth: 2, borderColor: Color.ThemeBlue},
+            { borderWidth: 2, borderColor: Color.ThemeBlue },
           ]}
           BtnTxtStyle={[styles.BtnTxtStyle]}
           title={'Post Job'}
@@ -189,5 +232,39 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     alignSelf: 'center',
     backgroundColor: Color.ThemeBlue,
+  },
+
+  CheckBox_Main_Container: {
+    flexDirection: 'row',
+    marginVertical: 8,
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  label: {
+    margin: 1,
+    color: Color.Black,
+    fontSize: 12
+  },
+  warning_cont: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#F7D560',
+    backgroundColor: '#FFFEE9',
+    borderWidth: 1,
+    borderRadius: 10,
+    padding: 10,
+    marginTop: 12,
+  },
+  warning_Image: {
+    height: 21,
+    width: 21,
+    marginLeft: 2
+  },
+  warning_text: {
+    fontSize: 10,
+    marginLeft: 10,
+    color: Color.Grey
   },
 });
