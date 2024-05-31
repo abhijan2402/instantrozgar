@@ -9,11 +9,11 @@ export const getAllJobs = async (user) => {
             res?._docs.forEach(item => {
                 resultedArray.push({...item.data(), id: item.id});
             });
-            const filteredJobs = resultedArray.filter(job => 
-                user?.jobRoles.some(role => job.jobRole.includes(role))
-            );
+            // const filteredJobs = resultedArray.filter(job => 
+            //     user?.jobRoles.some(role => job.jobRole.includes(role))
+            // );
             // filteredJobs?.forEach((item)=>console.log(item.jobRole,'m'))
-            resolve({ data: filteredJobs, error: false })
+            resolve({ data: resultedArray, error: false })
         })
         .catch((e) => {
             console.log(e,'mk')

@@ -17,14 +17,18 @@ import {Color} from '../../Constants/Color';
 import {getJobRoles} from '../../Network/HelperFunctions/common';
 import Typoghraphy from '../../Components/Typoghraphy';
 import {Slider} from '@miblanchard/react-native-slider';
-import Button from '../../Components/Button';
+import MultiSlider from '@ptomasroos/react-native-multi-slider';
 
-const JobFilter = forwardRef(({ onApplyFilter }, ref) => {
+import Button from '../../Components/Button';
+import Entypo from 'react-native-vector-icons/Entypo';
+
+const JobFilter = forwardRef(({onApplyFilter}, ref) => {
   const [openPopup, setOpenPopup] = useState(false);
   const [prefferedRoles, setPrefferedROles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [jobRoles, setJobRoles] = useState([]);
-  const [sliderValue, setSliderValues] = useState(0);
+  const [sliderValue, setSliderValues] = useState([20,30000]);
+  // const [sliderValues, setSliderValues] = useState([20, 80]);
 
   useEffect(() => {
     getRoles();
@@ -58,11 +62,18 @@ const JobFilter = forwardRef(({ onApplyFilter }, ref) => {
       };
     },
   }));
-  
+
   const filterData = () => {
     onApplyFilter(prefferedRoles, sliderValue);
-   
+
     setOpenPopup(false);
+  };
+
+  const onHandleClose = () => {
+    setOpenPopup(false);
+  };
+  const handleValuesChange = (values) => {
+    setSliderValues(values);
   };
 
   return (
@@ -73,7 +84,14 @@ const JobFilter = forwardRef(({ onApplyFilter }, ref) => {
       onRequestClose={() => setOpenPopup(false)}>
       <View style={styles.modeOuter}>
         <View style={styles.innnerModel}>
-          <Text style={{color: Color.Black, fontWeight: '600'}}>Job Role</Text>
+          <View style={styles.headContainer}>
+            <Text style={{color: Color.Black, fontWeight: '600'}}>
+              Job Role
+            </Text>
+            <TouchableOpacity onPress={() => onHandleClose()}>
+              <Entypo name="cross" color={'#808080'} size={26} />
+            </TouchableOpacity>
+          </View>
           <View
             style={{
               display: 'flex',
@@ -125,10 +143,20 @@ const JobFilter = forwardRef(({ onApplyFilter }, ref) => {
           <Text style={{color: Color.Black, fontWeight: '600', marginTop: 10}}>
             Expected Salary
           </Text>
-          <Slider
+
+          {/* <Slider
             // value={sliderValue}
             onValueChange={value => setSliderValues(Math.round(value * 1000))}
-          />
+          /> */}
+            <MultiSlider
+        values={sliderValue}
+        sliderLength={280}
+        onValuesChange={handleValuesChange}
+        min={0}
+        max={100000}
+        step={1}
+      />
+      
           <Button
             onPress={filterData}
             BtnStyle={[
@@ -138,6 +166,7 @@ const JobFilter = forwardRef(({ onApplyFilter }, ref) => {
             BtnTxtStyle={[styles.BtnTxtStyle]}
             title={'Search Job'}
           />
+
           {/* <Text style={{color:Color.Black,fontWeight:'600',marginTop:10}}>Value: {sliderValue}</Text> */}
         </View>
       </View>
@@ -162,6 +191,13 @@ const styles = StyleSheet.create({
     // alignItems: 'center',
     paddingHorizontal: 14,
     paddingTop: 20,
+  },
+  headContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   BtnStyle: {
     paddingVertical: 5,

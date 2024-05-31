@@ -68,14 +68,17 @@ const HomeSeeker = ({navigation}) => {
   };
   
   const applyFilters = (prefferedRoles, sliderValue) => {
-    if (prefferedRoles.length === 0 && sliderValue === 0) {
+    console.log(sliderValue,"slidervalue")
+    if (prefferedRoles.length === 0 && sliderValue.length === 0) {
       setSearchPro(Jobs);
     } else {
       const filterJobs = Jobs.filter(job => {
-        const matchRoles = job.jobRole.some(role =>
-          prefferedRoles.includes(role),
+        const matchRoles = Array.isArray(job.jobRole) && job.jobRole.some(role =>
+          Array.isArray(prefferedRoles) && prefferedRoles.includes(role)
         );
-        const matchSalary = job.Salart >= sliderValue;
+
+        const [startValue, endValue] = sliderValue;
+        const matchSalary =  job.Salart >= startValue && job.Salart <= endValue;
         return matchRoles && matchSalary;
       });
       setSearchPro(filterJobs);
