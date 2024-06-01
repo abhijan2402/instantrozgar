@@ -19,6 +19,7 @@ import {useIsFocused} from '@react-navigation/native';
 import {GlobalVariable} from '../../../App';
 import {getAllJobs} from '../../Network/Seeker/Home';
 import JobFilter from './JobFilter';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 const HomeSeeker = ({navigation}) => {
   const jobFilterRef = useRef();
@@ -111,8 +112,16 @@ const HomeSeeker = ({navigation}) => {
                 justifyContent: 'space-evenly',
                 backgroundColor: Color.Light_grey,
                 fontWeight: '600',
+                flexDirection:"row",
+                alignItems:"center"
               },
             ]}>
+              <Ionicons
+                name="filter-outline"
+                color={'#808080'}
+                size={20}
+                style={{marginRight:4}}
+              />
             <Text style={[styles.textStyle, {}]}>Apply Filter</Text>
           </TouchableOpacity>
         </View>

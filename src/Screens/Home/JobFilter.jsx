@@ -149,13 +149,16 @@ const JobFilter = forwardRef(({onApplyFilter}, ref) => {
             onValueChange={value => setSliderValues(Math.round(value * 1000))}
           /> */}
             <MultiSlider
-        values={sliderValue}
-        sliderLength={280}
-        onValuesChange={handleValuesChange}
-        min={0}
-        max={100000}
-        step={1}
-      />
+              values={sliderValue}
+              sliderLength={280}
+              onValuesChange={handleValuesChange}
+              min={0}
+              max={100000}
+              step={1}
+            />
+            <Text style={{color: Color.Black, fontWeight: '600',marginTop:-10}}>
+              {sliderValue[0]} - {sliderValue[1]}
+            </Text>
       
           <Button
             onPress={filterData}
