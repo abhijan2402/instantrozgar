@@ -347,7 +347,7 @@ const CreateProfile = ({navigation, route}) => {
             : null}
         </View>
         <Text style={{color:Color.Black,fontWeight:'600',marginTop:10}} >
-          Preffered Roles
+          Preferred Roles
         </Text>
         <View
           style={{

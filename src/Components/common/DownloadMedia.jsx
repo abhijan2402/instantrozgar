@@ -49,9 +49,9 @@ const DownloadMedia = ({fileUrl}) => {
         <View style={styles.box} >
           <ImageBackground
             blurRadius={2}
-            resizeMode='cover'
+            resizeMode='contain'
             style={{width:'100%',height:70}} 
-            source={require("../../assets/Images/rm.png")} 
+            source={require("../../assets/Images/gallery.png")} 
           />
           <Text style={styles.verifiedText}>Verified</Text>
           <TouchableOpacity onPress={downloadFile} >
