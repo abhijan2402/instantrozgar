@@ -32,6 +32,15 @@ const AddJob = ({ navigation }) => {
   ]);
 
 
+  const [openJobType, setOpenJobType] = useState(false);
+  const [valueJobType, setValueJobType] = useState(null);
+  const [Jobitems, setJobItems] = useState([
+    { label: 'WebDevelopment', value: 'WebDevelopment' },
+    { label: 'Front End', value: 'Front End' },
+    { label: 'Mern Stack', value: 'Mern Stack' },
+  ]);
+
+
   // State for checkboxes
   const [acceptCall, setAcceptCall] = useState(true);
   const [acceptEmail, setAcceptEmail] = useState(true);
@@ -149,7 +158,9 @@ const AddJob = ({ navigation }) => {
           setItems={setItems}
           placeholder={'Job Mode'}
           style={{ marginVertical: 10 }}
+
         />
+
         <TextInput
           multiline
           numberOfLines={5}
@@ -160,6 +171,17 @@ const AddJob = ({ navigation }) => {
           onChangeText={value => {
             setJobDesc(value);
           }}
+        />
+        <DropDownPicker
+          open={openJobType}
+          value={valueJobType}
+          items={Jobitems}
+          setOpen={setOpenJobType}
+          setValue={setValueJobType}
+          setItems={setJobItems}
+          placeholder={'Job Type'}
+          style={{ marginVertical: 10 }}
+
         />
         <View style={styles.CheckBox_Main_Container}>
           <View style={styles.checkboxContainer}>

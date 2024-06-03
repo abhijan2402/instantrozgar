@@ -8,6 +8,7 @@ import {Color} from '../../Constants/Color';
 
 const JobList = ({route, navigation}) => {
   const List = route?.params?.Job;
+  console.log('Job List for', route?.params?.title, ':', List);
   return (
     <View>
       <Header

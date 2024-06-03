@@ -6,25 +6,28 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useContext, useEffect, useState} from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Header from '../../Components/Header';
-import {windowHeight} from '../../Constants/Dimension';
-import {Color} from '../../Constants/Color';
+import { windowHeight } from '../../Constants/Dimension';
+import { Color } from '../../Constants/Color';
 import Typoghraphy from '../../Components/Typoghraphy';
 import JobBox from '../../Components/ProviderComp/JobBox';
 import Button from '../../Components/Button';
-import {GlobalVariable} from '../../../App';
+import { GlobalVariable } from '../../../App';
 import firestore from '@react-native-firebase/firestore';
 
-const HomeProvider = ({navigation}) => {
+const HomeProvider = ({ navigation }) => {
   const [JobListVal, setJobListVal] = useState([]);
   const [ActiveJob, setActiveJob] = useState([]);
+  const [RejectJob, setRejectJob] = useState([]);
   const [PendingJob, setPendingJob] = useState([]);
   const [ClosedJob, setClosedJob] = useState([]);
-  const {userDetails, userID} = useContext(GlobalVariable);
+  const { userDetails, userID } = useContext(GlobalVariable);
   const [Loader, setLoader] = useState(false);
   const [refreshing, setRefreshing] = React.useState(false);
-  console.log(userDetails, 'USERID');
+
+  console.log("userID", userDetails.id)
+
   useEffect(() => {
     JobsList();
   }, []);
@@ -32,29 +35,49 @@ const HomeProvider = ({navigation}) => {
   const JobsList = async () => {
     setLoader(true);
     const resultedArray = [];
-    const performanceData = await firestore()
-      .collection('JobList')
-      .where('CompanyID', '==', userDetails?.id)
-      .get();
-    performanceData.forEach(item => {
-      resultedArray.push({...item.data(), id: item.id});
-    });
-    setLoader(false);
-    setJobListVal(resultedArray);
-    if (resultedArray.length > 0) {
-      console.log('Hi');
-      const PendingJob = FilterData('Pending', resultedArray);
-      setPendingJob(PendingJob);
-      const ActiveJob = FilterData('Active', resultedArray);
-      setActiveJob(ActiveJob);
-      const ClosedJob = FilterData('Closed', resultedArray);
-      setClosedJob(ClosedJob);
-      console.log(PendingJob, 'pENIFN', ActiveJob, 'YHHH', ClosedJob);
+    try {
+      const performanceData = await firestore()
+        .collection('JobList')
+        .where('CompanyID', '==', userDetails?.id)
+        .get();
+      performanceData.forEach(item => {
+        resultedArray.push({ ...item.data(), id: item.id });
+      });
+
+      console.log('Fetched Data:', resultedArray);
+
+      setJobListVal(resultedArray);
+
+      if (resultedArray.length > 0) {
+        const PendingJob = FilterData('Pending', resultedArray);
+        setPendingJob(PendingJob);
+
+        const ActiveJob = FilterData('approved', resultedArray);
+        setActiveJob(ActiveJob);
+
+        const ClosedJob = FilterData('Closed', resultedArray);
+        setClosedJob(ClosedJob);
+
+        const RejectJob = FilterData('rejected', resultedArray);
+        setRejectJob(RejectJob);
+
+        console.log('Pending Jobs:', PendingJob);
+        console.log('Active Jobs:', ActiveJob);
+        console.log('Closed Jobs:', ClosedJob);
+        console.log('Rejected Jobs:', RejectJob);
+      }
+    } catch (error) {
+      console.error('Error fetching jobs:', error);
     }
+    setLoader(false);
   };
+
   const FilterData = (val, Arr) => {
-    return Arr.filter(item => item?.status == val);
+    const filteredData = Arr.filter(item => item?.status === val);
+    console.log(`Filtered ${val} Jobs:`, filteredData);
+    return filteredData;
   };
+
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
     JobsList();
@@ -62,6 +85,7 @@ const HomeProvider = ({navigation}) => {
       setRefreshing(false);
     }, 2000);
   }, []);
+
   return (
     <View style={styles.MainContainer}>
       <Header
@@ -71,7 +95,7 @@ const HomeProvider = ({navigation}) => {
         }}
       />
       {Loader ? (
-        <View style={{height: windowHeight / 1.5, justifyContent: 'center'}}>
+        <View style={{ height: windowHeight / 1.5, justifyContent: 'center' }}>
           <ActivityIndicator size={40} color={Color.Purple} />
         </View>
       ) : (
@@ -107,12 +131,21 @@ const HomeProvider = ({navigation}) => {
               });
             }}
           />
+          <JobBox
+            title={'Rejected Jobs'}
+            onPress={() => {
+              navigation.navigate('JobList', {
+                title: 'Rejected Jobs',
+                Job: ClosedJob,
+              });
+            }}
+          />
         </ScrollView>
       )}
       <Button
         title={'+'}
         BtnStyle={styles.BtnStyleMain}
-        BtnTxtStyle={{color: Color.White, fontSize: 30}}
+        BtnTxtStyle={{ color: Color.White, fontSize: 30 }}
         onPress={() => {
           navigation.navigate('AddJob');
         }}

@@ -3,4 +3,4 @@ export const FIREBASE_COLLECTION={
     APPLIED_JOBS:'AppliedJobs',
     JOBS:"JobList",
     META_DATA:"metadata"
-}
+} 
